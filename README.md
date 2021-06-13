@@ -75,35 +75,25 @@ Filesystem berfungsi normal layaknya Linux pada umumnya, mount source (root) fil
 
 ### 1A ###
 
-- <b>SOAL</b>
-
-  Jika sebuah direktori dibuat dengan awalan `AtoZ_`, maka direktori tersebut akan menjadi direktori ter-<i>encode</i>.
+  - Jika sebuah direktori dibuat dengan awalan `AtoZ_`, maka direktori tersebut akan menjadi direktori ter-<i>encode</i>.
 
 ### 1B ###
 
-- <b>SOAL</b>
-
-  Jika sebuah direktori di-<i>rename</i> dengan awalan `AtoZ_`, maka direktori tersebut akan menjadi direktori ter-<i>encode</i>.
+  - Jika sebuah direktori di-<i>rename</i> dengan awalan `AtoZ_`, maka direktori tersebut akan menjadi direktori ter-<i>encode</i>.
 
 ### 1C ###
 
-- <b>SOAL</b>
-
-  Apabila direktori yang terenkripsi di-<i>rename</i> menjadi tidak ter-<i>encode</i>, maka isi direktori tersebut akan ter-<i>decode</i>.
+  - Apabila direktori yang terenkripsi di-<i>rename</i> menjadi tidak ter-<i>encode</i>, maka isi direktori tersebut akan ter-<i>decode</i>.
 
 ### 1D ###
 
-- <b>SOAL</b>
-
-  Setiap pembuatan direktori ter-<i>encode</i> (<b><i>mkdir</i></b> atau <b><i>rename</i></b>) akan tercatat ke sebuah <i>log</i>. Format: `/home/[USER]/Downloads/[Nama Direktori]` → `/home/[USER]/Downloads/AtoZ_[Nama Direktori]`.
+  - Setiap pembuatan direktori ter-<i>encode</i> (<b><i>mkdir</i></b> atau <b><i>rename</i></b>) akan tercatat ke sebuah <i>log</i>. Format: `/home/[USER]/Downloads/[Nama Direktori]` → `/home/[USER]/Downloads/AtoZ_[Nama Direktori]`.
 
 ### 1E ###
 
-- <b>SOAL</b>
+  - Metode <i>encode</i> pada suatu direktori juga berlaku terhadap direktori yang ada di dalamnya (rekursif).
 
-  Metode <i>encode</i> pada suatu direktori juga berlaku terhadap direktori yang ada di dalamnya (rekursif).
-
-## JAWABAN ##
+### JAWABAN ###
 
 Membuat enkripsi yaitu dengan cara tiap <i>system call</i> `xmp_readdir()` membaca sebuah direktori yang memiliki awalan `/AtoZ`, maka nama yang diinputkan pada <i>buffer</i> akan dienkripsi terlebih dahulu. Untuk mengatasi <i>entry</i> yang telah terenkripsi, seluruh <i>system call</i> akan mengecek terlebih dahulu apakah <i>path</i> yang diinputkan memiliki direktori dengan awalan `/AtoZ`. Jika ada maka akan melakukan dekripsi pada <i>path</i> tersebut.
 
@@ -153,7 +143,7 @@ void getDirAndFile(char *dir, char *file, char *path) {
     }
 }
 ```
-Fungsi ini akan membagi `path` yang diinputkan menjadi `dir` dan `file` berdasarkan lokasi `/` terakhir. Pertama, deklarasi variabel `buff` untuk menyimpan `path`, lalu agar tidak mengubah isinya memakai `strtok()`. `dir` dan `file` di-`memset()` supaya isinya menjadi kosong. Kemudian, `path` akan di-`strcpy()` ke dalam `buff`. Buat `token` dengan `strtok()` pada `buff` dengan <i>delimiter</i> `"/"`, diiterasi untuk masing-masing `token`. Tiap iterasi akan meng-<i>copy</i> isi `token` ke dalam variabel `file` menggunakan `sprintf()`, lalu, `token` akan diiterasi ke `token` selanjutnya. Di akhir iterasi akan dicek apakah `token` tersebut belum `token` terakhir, jika belum, maka akan <i>update</i> variabel `dir` agar menjadi `dir/file` menggunakan `sprintf()`
+Fungsi ini akan membagi `path` yang diinputkan menjadi `dir` dan `file` berdasarkan lokasi `/` terakhir. Pertama, deklarasi variabel `buff` untuk menyimpan `path`, lalu agar tidak mengubah isinya memakai `strtok`. `dir` dan `file` di-`memset` supaya isinya menjadi kosong. Kemudian, `path` akan di-`strcpy` ke dalam `buff`. Buat `token` dengan `strtok` pada `buff` dengan <i>delimiter</i> `"/"`, diiterasi untuk masing-masing `token`. Tiap iterasi akan meng-<i>copy</i> isi `token` ke dalam variabel `file` menggunakan `sprintf()`, lalu, `token` akan diiterasi ke `token` selanjutnya. Di akhir iterasi akan dicek apakah `token` tersebut belum `token` terakhir, jika belum, maka akan <i>update</i> variabel `dir` agar menjadi `dir/file` menggunakan `sprintf`
 
 `Fungsi changePath`
 ```C
@@ -170,7 +160,251 @@ void changePath(char *fpath, const char *path, int isWriteOperation, int isFileA
     . . .
 }
 ```
-Fungsi ini didefinisikan dengan empat argumen. Argumen pertama, `fpath` untuk <i>buffer</i> hasil perubahan `path` menjadi <i>path</i> yang baru. Argumen kedua, `path` untuk diinput ke masing-masing <i>system call</i> dan mengubah <i>path</i>-nya sesuai <b><i>mount</i>-<i>point</i></b> atau metode enkripsi <b>Atbash Cipher</b>. Argumen ketiga, `isWriteOperation` untuk mendefinisikan <i>system call</i> yang memanggil fungsi apakah operasi <i>write</i> (karena ketika ingin membuat <i>file</i> pada direktori yang terenkripsi dengan `/AtoZ`, maka <i>path</i> untuk <i>filename</i> yang di-<i>write</i> tidak dienkripsi maupun dienkripsi). Argument keempat, `isFileAsked` untuk mendefinisikan apakah <i>system call</i> yang memanggil fungsi ingin melakukan dekripsi pada sebuah <i>file</i> atau direktori (pada direktori, dekripsi akan dilakukan langsung, sementara pada <i>file</i> harus mengecek ekstensinya terlebih dahulu.
+Fungsi ini didefinisikan dengan empat argumen. Argumen pertama, `*fpath` untuk <i>buffer</i> hasil perubahan `path` menjadi <i>path</i> yang baru. Argumen kedua, `path` untuk diinput ke masing-masing <i>system call</i> dan mengubah <i>path</i>-nya sesuai <b><i>mount</i>-<i>point</i></b> atau metode enkripsi <b>Atbash Cipher</b>. Argumen ketiga, `isWriteOperation` untuk mendefinisikan <i>system call</i> yang memanggil fungsi apakah operasi <i>write</i> (karena ketika ingin membuat <i>file</i> pada direktori yang terenkripsi dengan `/AtoZ`, maka <i>path</i> untuk <i>filename</i> yang di-<i>write</i> tidak dienkripsi maupun dienkripsi). Argument keempat, `isFileAsked` untuk mendefinisikan apakah <i>system call</i> yang memanggil fungsi ingin melakukan dekripsi pada sebuah <i>file</i> atau direktori (pada direktori, dekripsi akan dilakukan langsung, sementara pada <i>file</i> harus mengecek ekstensinya terlebih dahulu.
+
+Variabel `*ptr` digunakan untuk menunjuk posisi `/AtoZ` pada <b><i>path</i></b> menggunakan fungsi `strstr()` (contoh: `/contoh/AtoZ_Vivy/wangy` -> `/AtoZ_Vivy/wangy`). Deklarasi variabel `state` untuk memastikan apakah <b><i>path</i></b> yang diinputkan berisi direktori di dalamnya atau hanya `/AtoZ` (contoh: `/contoh/AtoZ_Vivy` tidak akan didekripsi, sementara `/contoh/AtoZ_Vivy/wangy` akan didekripsi). Lalu cek apakah <i>string</i> setelah karakter pertama dari `ptr` memiliki karakter `/`, jika iya, maka `state` akan diset menjadi 1.
+
+```C
+char fixPath[1000];
+      	
+memset(fixPath, 0, sizeof(fixPath));
+  	
+if (ptr != NULL && state) {
+    ptr = strstr(ptr + 1, "/");
+    char pathAtoZDirBuff[1000];
+    char pathEncryptedBuff[1000];
+    	
+    strcpy(pathEncryptedBuff, ptr);
+    strncpy(pathAtoZDirBuff, path, ptr - path);
+    
+    . . .
+}
+
+. . .
+```
+Pendefinisian <i>buffer</i> `fixpath()` yang digunakan untuk menyimpan <i>proccessed path</i> dari tiap kondisi yang berbeda. `if()` akan berjalan ketika terdapat <i>substring</i> `/AtoZ_` pada <b><i>path</i></b> dengan kondisi `state` <b>TRUE</b>. `ptr` akan diset menjadi <i>path</i> setelah `/AtoZ_` (contoh: `/AtoZ_Vivy/wangy` akan menjadi `/wangy` pada `ptr`). Lalu didefinisikan juga `pathEncryptedBuff` untuk menyimpan <i>path</i> `*ptr` yang telah dicari menggunakan `strcpy()`, dan juga `pathAtoZDirBuff` untuk menyimpan <b><i>path</i></b> yang tidak didekripsi menggunakan `strncpy()` dari karakter pertama <b><i>path</i></b> sampai `ptr` - `path` (contoh: `/dir/AtoZ_Vivy/wangy` akan disimpan menjadi `/dir/AtoZ_Vivy` pada `pathAtoZDirBuff` dan `/wangy` pada `pathEncryptedBuff`).
+
+```C
+if (isWriteOperation) {
+    char pathFileBuff[1000];
+    char pathDirBuff[1000];
+				
+    getDirAndFile(pathDirBuff, pathFileBuff, pathEncryptedBuff);
+    atbashCode(pathDirBuff);
+    sprintf(fixPath, "%s%s/%s", pathAtoZDirBuff, pathDirBuff, pathFileBuff);
+}
+```
+Dalam kondisi `isWriteOperation`, yang didekripsi hanya <i>path</i> direktorinya saja, sehingga `pathEncryptedBuff` perlu dipisah menggunakan fungsi `getDirAndFile()` dan disimpan ke `pathDirBuff` dan `pathFileBuff`. Lalu menjalankan fungsi `atbashCode()` pada `pathDirBuff` saja. Setelah itu, seluruh <i>path</i> akan dijadikan satu ke dalam <i>buffer</i> `fixPath` dengan urutan `pathAtoZDirBuff` (<i>path</i> tidak terenkripsi), `pathDirBuff` (<i>path</i> yang terenkripsi), dan terakhir `pathFileBuff` (nama <i>file</i>).
+
+```C
+. . .
+
+else if (isFileAsked) {
+    char pathFileBuff[1000];
+    char pathDirBuff[1000];
+    char pathExtBuff[1000];
+    
+    getDirAndFile(pathDirBuff, pathFileBuff, pathEncryptedBuff);
+    
+    char *whereIsExtension = strrchr(pathFileBuff, '.');
+			
+    if (whereIsExtension - pathFileBuff < 1) {
+        atbashCode(pathDirBuff);
+	atbashCode(pathFileBuff);
+	sprintf(fixPath, "%s%s/%s", pathAtoZDirBuff, pathDirBuff, pathFileBuff);
+    }
+    
+    . . .
+```
+Bagian ini berjalan untuk kondisi ketika bukan `isWriteOperation` dan yang diminta merupakan `isFileAsked`. Lalu deklarasi `pathFileBuff`, `pathDirBuff`, dan `pathExtBuff` untuk menyimpan <i>file</i>, directori, dan ekstensi dari `pathEncryptedBuff`. Pertama, <i>path</i> direktori dan <i>path file</i> dipisah terlebih dahulu menggunakan fungsi `getDirAndFile()`. Untuk mencari ekstensinya, dideklarasikan <i>pointer</i> `*whereIsExtension` untuk menunjuk karakter `'.'` terakhir pada `pathFileBuff` menggunakan fungsi `strrchr`. Lalu dicek apakah karakter `'.'` terakhir ini merupakan karakter pertama, jika iya, `pathFileBuff` berarti tidak memiliki ektensi seperti <i>file</i> dengan nama `.wangy`).
+
+Jika tidak terdapat ekstensi, maka `pathDirBuff` dan `pathFileBuff` akan didekripsi menggunakan fungsi `atbashCode()` dan disatukan kembali pada variabel `fixPath` sesuai format. Jika ternyata ada, maka akan dideklarasi `pathJustFileBuff` untuk menyimpan nama <i>file</i>-nya saja menggunakan `snprintf` dan isi <i>value</i> `pathExtBuff` dengan ekstensi saja. `pathDirBuff` dan `pathJustFileBuff` akan didekripsi menggunakan fungsi `atbashCode()` dan disatukan kembali pada variabel `fixPath` sesuai format.
+
+```C
+. . .
+    
+    else {
+        char pathJustFileBuff[1000];
+				
+        memset(pathJustFileBuff, 0, sizeof(pathJustFileBuff));
+        strcpy(pathExtBuff, whereIsExtension);
+        snprintf(pathJustFileBuff, whereIsExtension - pathFileBuff + 1, "%s", pathFileBuff);
+        atbashCode(pathDirBuff);
+        atbashCode(pathJustFileBuff);
+        sprintf(fixPath, "%s%s/%s%s", pathAtoZDirBuff, pathDirBuff, pathJustFileBuff, pathExtBuff);
+    }
+
+else {
+    atbashCode(pathEncryptedBuff);
+    sprintf(fixPath, "%s%s", pathAtoZDirBuff, pathEncryptedBuff);
+}
+
+. . .
+
+if (strcmp(path, "/") == 0) {
+    sprintf(fpath, "%s", dirpath);
+}
+	
+else {
+    sprintf(fpath, "%s%s", dirpath, fixPath);
+}
+```
+`else` pertama untuk kondisi bukan `isWriteOperation` dan yang diminta bukan merupakan `isFileAsked` atau direktori sehingga isi dalam <i>buffer</i> `pathEncryptedBuff` akan langsung didekripsi dan disimpan ke dalam `fixPath`.
+
+`else` kedua untuk kondisi `state` sama dengan 0 atau tidak ada karakter `AtoZ_` sehingga isi dari `fixPath` akan sama dengan `path` karena tidak ada metode enkripsi dan dekripsi yang dijalankan.
+
+Selanjutnya adalah mengubah `fixPath` menjadi `fpath` dengan mengisi <b><i>mount</i></b>-<b><i>point</i></b> yang telah dideklarasi pada variabel `dirpath`. Caranya yaitu jika <b><i>path</i></b> yang diinputkan merupakan <i>root</i> `"/"`, maka `dirpath` langsung di-<i>copy</i> ke dalam `fpath`, jika bukan, maka akan diformat agar `fixPath` menuju <b><i>mount</i></b>-<b><i>point</i></b> yang terletak pada `dirpath`.
+
+`System call readdir`
+```C
+static int xmp_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offset, struct fuse_file_info *fi) {
+char fpath[1000];
+	
+changePath(fpath, path, 0, 0);
+
+DIR *dp;
+struct dirent *de;
+(void) offset;
+(void) fi;
+
+dp = opendir(fpath);
+	
+if (dp == NULL) {
+    const char *desc[] = {path};
+    fileLog("INFO", "READDIR", 1, desc);
+    
+    return -errno;
+}
+
+while ((de = readdir(dp)) != NULL) {
+    struct stat st;
+		
+    memset(&st, 0, sizeof(st));
+			
+    st.st_ino = de->d_ino;
+    st.st_mode = de->d_type << 12;
+			
+    if (strcmp(de->d_name, ".") == 0 || strcmp(de->d_name, "..") == 0) {
+        continue;
+    }
+			
+    if (strstr(path, "/AtoZ_") != NULL) {
+        char encodeThis[1000];
+				
+        strcpy(encodeThis, de->d_name);
+				
+	if (de->d_type == DT_REG) {
+	    char *whereIsExtension = strrchr(encodeThis, '.');
+					
+	    if (whereIsExtension - encodeThis < 1) {
+		atbashCode(encodeThis);
+	    }
+					
+	    else {
+	        char pathFileBuff[1000];
+		char pathExtBuff[1000];
+						
+		strcpy(pathExtBuff, whereIsExtension);
+		snprintf(pathFileBuff, whereIsExtension - encodeThis + 1, "%s", encodeThis);
+		atbashCode(pathFileBuff);
+		memset(encodeThis, 0, sizeof(encodeThis));
+		sprintf(encodeThis, "%s%s", pathFileBuff, pathExtBuff);
+	    }
+	}   
+						
+	else if (de->d_type == DT_DIR) {
+	    atbashCode(encodeThis);
+	}
+
+	if (filler(buf, encodeThis, &st, 0)) {
+	    break;
+	}
+    }
+
+. . .
+```
+<i>System call</i> `xmp_readdir()` ini digunakan untuk melakukan enkripsi pada <i>entry</i> yang berada pada direktori `/AtoZ_`. Pada fungsi di atas, jika pada <i>path</i> terdapat `/AtoZ_`, maka akan dilakukan enkripsi.
+
+Pertama, mendeklarasikan variabel `encodeThis` dengan mengambil nama dari <i>entry</i>-nya (`de->d_name`). Jika <i>entry</i> tersebut merupakan `DT_REG` (<i>file</i> reguler), maka akan dilakukan enkripsi <i>file</i> (ekstensi tidak terenkripsi). Pertama, akan dicari lokasi ekstensi menggunakan <i>pointer</i> `*whereIsExtension` untuk menunjuk lokasinya dan fungsi `strrchr`. Dicek apakah <i>file</i> tersebut memiliki ekstensi atau tidak. Jika tidak, maka `encodeThis` akan langsung dienkripsi dengan fungsi `atbashCode()`. Jika terdapat ekstensi, maka antara nama <i>file</i> dan ekstensinya dipisah ke dalam `pathFileBuff` dan `pathExtBuff` menggunakan cara yang sama pada fungsi `changePath()`. Lalu, `pathFileBuff` akan dienkripsi menggunakan fungsi `atbashCode()`, nama <i>file</i> dan ekstensinya disatukan kembali dan disimpan dalam variabel `encodeThis`.
+
+Jika ternyata tipe dari <i>entry</i> tersebut `DT_DIR`, maka `encodeThis` akan langsung dienkripsi. Setelah proses enkripsi selesai, dimasukkan ke dalam `buf` menggunakan fungsi `filler()`.
+
+Jika <i>path</i> yang dimasukkan tidak memiliki `/AtoZ_` di dalamnya, maka nama <i>entry</i> (`de->d_name`) akan langsung dimasukkan ke dalam `buf` menggunakan fungsi `filler()`.
+
+`Implementasi system call write operation (xmp_mkdir)`
+```C
+static int xmp_mkdir(const char *path, mode_t mode) {
+    char fpath[1000];
+
+    changePath(fpath, path, 1, 0);
+
+    char *ptr = strrchr(path, '/');
+    char *filePtr = strstr(ptr, "/AtoZ_");
+  	
+    if (filePtr != NULL) {
+        if (filePtr - ptr == 0) {
+      	    const char *desc[] = {path};
+      	    fileLog("INFO", "MKDIR", 1, desc);
+    	}
+    }
+    
+    . . .
+    
+    int res;
+
+    res = mkdir(fpath, mode);
+
+    const char *desc[] = {path};
+    fileLog("INFO", "MKDIR", 1, desc);
+    
+    if (strstr(path, "/AtoZ_") != NULL || strstr(path, "/RX_") != NULL) {
+        fileLogv2("MKDIR", fpath, fpath);
+    }
+
+    if (res == -1) {
+	return -errno;
+    }
+
+    return 0;
+}
+```
+Pada <i>system call</i> di atas dilakukan `changePath()` terhadap `path` untuk mendapatkan `fpath`, argument `isWriteOperation` sama dengan 1 karena <b>mkdir</b> merupakan operasi <i>write</i> (membuat). Setiap pembuatan direktori `/AtoZ_` harus di-log. Untuk melakukan <i>logging</i>, kami menggunakan fungsi `fileLog` yang akan dijelaskan pada soal 4. Setelah itu <b>mkdir</b> akan dijalankan seperti biasa dan hasilnya akan di-<i>return</i>. <i>Logging</i> tersebut juga dilakukan pada <i>system call</i> `xmp_rename()` dengan metode yang sama.
+
+`Implementasi system call read operation (xmp_getattr)`
+```C
+static int xmp_getattr(const char *path, struct stat *stbuf) {
+    char fpath[1000];
+  	
+    changePath(fpath, path, 0, 1);
+  	
+    if (access(fpath, F_OK) == -1) {
+    	memset(fpath, 0, sizeof(fpath));
+    	changePath(fpath, path, 0, 0);
+    }
+
+    int res;
+
+    res = lstat(fpath, stbuf);
+
+    const char *desc[] = {path};
+    fileLog("INFO", "GETATTR", 1, desc);
+
+    if (res == -1) {
+	return -errno;
+    }
+
+    return 0;
+}
+```
+Pada <i>system call</i> di atas dilakukan `changePath()` terhadap `path` untuk mendapatkan `fpath`. Karena ketika <b><i>path</i></b> yang dimasukkan tidak tahu apakah <i>file</i>-nya merupakan <i>file</i> biasa atau malah direktori, maka ubah terlebih dahulu dengan asumsi bahwa <b><i>path</i></b> tersebut merupakan <i>file</i> sehingga argumen `isFileAsked` sama dengan 1. Lalu, akan dicoba di-<i>access</i>, jika tidak bisa, maka akan dilakukan `changePath` kembali dengan argumen `isFileAsked` sama dengan 0 (direktori). Proses <b>getattr</b> akan berlangsung pada `fpath` tersebut.
+
+### OUTPUT ###
+
+### KESULITAN ###
+
+- Kesulitan sewaktu <i>debug</i>.
+- Kesulitan sewaktu enkripsi dan dekripsi yang menyebabkan <i>file</i> atau direktori tidak terbaca.
+- Masih ada <i>warning</i> untuk alokasi memori variabel pada program, namun progam masih bisa berjalan dengan baik. 
 
 ## SOAL 2 ##
 
