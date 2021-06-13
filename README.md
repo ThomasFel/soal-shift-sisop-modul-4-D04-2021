@@ -408,6 +408,11 @@ char *extensionFile(char *path) {
 ```
 Fungsi di atas digunakan untuk mendapatkan nama <i>file</i> dari sebuah <i>path</i>. `strrchr` berfungsi guna mendapatkan posisi terakhir dari sebuah karakter. Fungsi ini nantinya akan dipakai untuk pencatatan <i>log</i> pada [soal.1d](#1d "Goto 1d").
 
+```C
+static const char *logpath2 = "/home/thomasfelix/SinSeiFSv2.log";
+```
+Fungsi yang digunakan untuk melakukan <i>logging</i> pada nomor ini adalah fungsi `fileLogv2()`.
+
 `Fungsi fileLogv2`
 ```C
 void fileLogv2 (char *cmd, char *from, char *to) {
@@ -470,6 +475,30 @@ static int xmp_rename(const char *from, const char *to) {
 ```
 
 ### OUTPUT ###
+
+<b><i>Filesystem yang terhubung dengan direktori /home/[user]/Downloads</i></b>
+
+<img src="https://user-images.githubusercontent.com/37539546/121811181-d0c5a180-cc8d-11eb-9652-c8e346674391.png" width="640" height="480">
+
+<b><i>Membuat direktori baru (mkdir) dengan nama AtoZ_banget</i></b>
+
+<img src="https://user-images.githubusercontent.com/37539546/121811309-31ed7500-cc8e-11eb-974c-1ddd75dcd0e8.png" width="640" height="480">
+
+<b><i>Mengisi direktori AtoZ_banget dengan folder AAAA dan file status.txt, nama folder dan file akan berubah sesuai Atbash Cipher</i></b>
+
+<img src="https://user-images.githubusercontent.com/37539546/121811481-bc35d900-cc8e-11eb-9c12-0ac54be9387a.png" width="640" height="480">
+
+<b><i>Mengubah nama direktori (rename) dari AtoZ_banget menjadi banget</i></b>
+
+<img src="https://user-images.githubusercontent.com/37539546/121811379-7bd65b00-cc8e-11eb-948c-9cc63d5decb8.png" width="640" height="480">
+
+<b><i>Setelah proses rename, nama folder dan file akan berubah kembali ke awal</i></b>
+
+<img src="https://user-images.githubusercontent.com/37539546/121811528-e7202d00-cc8e-11eb-878d-270fe98057c6.png" width="640" height="480">
+
+<b><i>Isi file log SinSeiFSv2.log</i></b>
+
+<img src="https://user-images.githubusercontent.com/37539546/121811675-51d16880-cc8f-11eb-93f4-a9f195387eaa.png" width="640" height="480">
 
 ### KENDALA ###
 
@@ -693,6 +722,28 @@ static int xmp_rename(const char *from, const char *to) {
 
 ### OUTPUT ###
 
+<b><i>Membuat direktori baru (mkdir) dengan nama RX_King</i></b>
+
+<img src="https://user-images.githubusercontent.com/37539546/121811965-55b1ba80-cc90-11eb-99fa-e40a2a598b07.png" width="640" height="480">
+
+<b><i>Mengisi direktori RX_King dengan folder CCCC dan file SuatuFile.txt, nama folder dan file akan berubah sesuai Atbash Cipher + ROT13</i></b>
+
+<img src="https://user-images.githubusercontent.com/37539546/121811792-a83ea700-cc8f-11eb-92bb-8a20aee331bb.png" width="640" height="480">
+
+<b><i>Mengubah nama direktori (rename) dari RX_King menjadi King</i></b>
+
+<img src="https://user-images.githubusercontent.com/37539546/121811830-cc9a8380-cc8f-11eb-91fe-9ef2817591e9.png" width="640" height="480">
+
+<b><i>Setelah proses rename, nama folder dan file akan berubah kembali ke awal</i></b>
+
+<img src="https://user-images.githubusercontent.com/37539546/121811844-da500900-cc8f-11eb-942b-dccb1dcc75f3.png" width="640" height="480">
+
+<b><i>Isi file log SinSeiFSv2.log</i></b>
+
+<img src="https://user-images.githubusercontent.com/37539546/121811675-51d16880-cc8f-11eb-93f4-a9f195387eaa.png" width="640" height="480">
+
+
+
 ### KENDALA ###
 - Pada [soal.2b](#2b "Goto 2b"), tidak bisa membedakan direktori yang dibuat dengan <b>mkdir</b> dan di-<b>rename</b> sehingga tidak selesai.
 - Pada [soal.2e](#2e "Goto 2e"), tidak mengerti cara untuk <i>split file</i> menjadi beberapa pecahan yang <i>file</i>-nya utuh di <i>filesystem</i> <b>SinSei</b> sehingga tidak selesai.
@@ -830,6 +881,14 @@ static int xmp_truncate(const char *path, off_t size) {
 ```
 
 ### OUTPUT ###
+
+<b><i>Isi file log SinSeiFS.log</i></b>
+
+<img src="https://user-images.githubusercontent.com/37539546/121811884-02d80300-cc90-11eb-91cc-f0080a367496.png" width="640" height="480">
+
+<b><i>Isi file log SinSeiFS.log ketika ada proses penghapusan file (unlink)</i></b>
+
+<img src="https://user-images.githubusercontent.com/37539546/121811907-1b481d80-cc90-11eb-84b6-2732ee1df38a.png" width="640" height="480">
 
 ### KENDALA ###
 - Tidak semua fungsi FUSE bisa diuji untuk proses <i>logging</i>, contohnya fungsi `xmp_utimens`.
