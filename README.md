@@ -75,23 +75,23 @@ Filesystem berfungsi normal layaknya Linux pada umumnya, mount source (root) fil
 
 ### 1A ###
 
-  - Jika sebuah direktori dibuat dengan awalan `AtoZ_`, maka direktori tersebut akan menjadi direktori ter-<i>encode</i>.
+- Jika sebuah direktori dibuat dengan awalan `AtoZ_`, maka direktori tersebut akan menjadi direktori ter-<i>encode</i>.
 
 ### 1B ###
 
-  - Jika sebuah direktori di-<i>rename</i> dengan awalan `AtoZ_`, maka direktori tersebut akan menjadi direktori ter-<i>encode</i>.
+- Jika sebuah direktori di-<i>rename</i> dengan awalan `AtoZ_`, maka direktori tersebut akan menjadi direktori ter-<i>encode</i>.
 
 ### 1C ###
 
-  - Apabila direktori yang terenkripsi di-<i>rename</i> menjadi tidak ter-<i>encode</i>, maka isi direktori tersebut akan ter-<i>decode</i>.
+- Apabila direktori yang terenkripsi di-<i>rename</i> menjadi tidak ter-<i>encode</i>, maka isi direktori tersebut akan ter-<i>decode</i>.
 
 ### 1D ###
 
-  - Setiap pembuatan direktori ter-<i>encode</i> (<b><i>mkdir</i></b> atau <b><i>rename</i></b>) akan tercatat ke sebuah <i>log</i>. Format: `/home/[USER]/Downloads/[Nama Direktori]` → `/home/[USER]/Downloads/AtoZ_[Nama Direktori]`.
+- Setiap pembuatan direktori ter-<i>encode</i> (<b><i>mkdir</i></b> atau <b><i>rename</i></b>) akan tercatat ke sebuah <i>log</i>. Format: `/home/[USER]/Downloads/[Nama Direktori]` → `/home/[USER]/Downloads/AtoZ_[Nama Direktori]`.
 
 ### 1E ###
 
-  - Metode <i>encode</i> pada suatu direktori juga berlaku terhadap direktori yang ada di dalamnya (rekursif).
+- Metode <i>encode</i> pada suatu direktori juga berlaku terhadap direktori yang ada di dalamnya (rekursif).
 
 ### JAWABAN ###
 
@@ -412,33 +412,23 @@ Selain itu Sei mengusulkan untuk membuat metode enkripsi tambahan agar data pada
 
 ### 2A ###
 
-- <b>SOAL</b>
-
-  Jika sebuah direktori dibuat dengan awalan `RX_[Nama]`, maka direktori tersebut akan menjadi direktori ter-<i>encode</i> beserta isinya dengan perubahan nama isi sesuai kasus nomor 1 dengan algoritma tambahan <b>ROT13</b> (<b>Atbash</b> + <b>ROT13</b>).
+- Jika sebuah direktori dibuat dengan awalan `RX_[Nama]`, maka direktori tersebut akan menjadi direktori ter-<i>encode</i> beserta isinya dengan perubahan nama isi sesuai kasus nomor 1 dengan algoritma tambahan <b>ROT13</b> (<b>Atbash</b> + <b>ROT13</b>).
 
 ### 2B ###
 
-- <b>SOAL</b>
-
-  Jika sebuah direktori di-<i>rename</i> dengan awalan `RX_[Nama]`, maka direktori tersebut akan menjadi direktori ter-<i>encode</i> beserta isinya dengan perubahan nama isi sesuai dengan kasus nomor 1 dengan algoritma tambahan <b>Vigenere Cipher</b> dengan <i>key</i> `SISOP` (<i>Case</i>-<i>sensitive</i>, <b>Atbash</b> + <b>Vigenere</b>).
+- Jika sebuah direktori di-<i>rename</i> dengan awalan `RX_[Nama]`, maka direktori tersebut akan menjadi direktori ter-<i>encode</i> beserta isinya dengan perubahan nama isi sesuai dengan kasus nomor 1 dengan algoritma tambahan <b>Vigenere Cipher</b> dengan <i>key</i> `SISOP` (<i>Case</i>-<i>sensitive</i>, <b>Atbash</b> + <b>Vigenere</b>).
   
 ### 2C ###
 
-- <b>SOAL</b>
-
-  Apabila direktori yang terencode di-<i>rename</i> (dihilangkan `RX_`-nya), maka folder menjadi tidak ter-<i>encode</i> dan isi direktori tersebut akan ter-<i>decode</i> berdasarkan nama aslinya.
+- Apabila direktori yang terencode di-<i>rename</i> (dihilangkan `RX_`-nya), maka folder menjadi tidak ter-<i>encode</i> dan isi direktori tersebut akan ter-<i>decode</i> berdasarkan nama aslinya.
 
 ### 2D ###
 
-- <b>SOAL</b>
-
-  Setiap pembuatan direktori terencode (<b><i>mkdir</i></b> atau <b><i>rename</i></b>) akan tercatat ke sebuah <i>log file</i> beserta <i>method</i>-nya (apakah itu <b><i>mkdir</i></b> atau <b><i>rename</i></b>).
+- Setiap pembuatan direktori terencode (<b><i>mkdir</i></b> atau <b><i>rename</i></b>) akan tercatat ke sebuah <i>log file</i> beserta <i>method</i>-nya (apakah itu <b><i>mkdir</i></b> atau <b><i>rename</i></b>).
   
 ### 2E ###
 
-- <b>SOAL</b>
-
-  Pada metode enkripsi ini, <i>file</i>-<i>file</i> pada direktori asli akan menjadi terpecah menjadi <i>file</i>-<i>file</i> kecil sebesar 1024 bytes, sementara jika diakses melalui <i>filesystem</i> rancangan Sin dan Sei akan menjadi normal. Sebagai contoh, `Suatu_File.txt` berukuran 3 kiloBytes pada direktori asli akan menjadi 3 <i>file</i> kecil yakni:
+- Pada metode enkripsi ini, <i>file</i>-<i>file</i> pada direktori asli akan menjadi terpecah menjadi <i>file</i>-<i>file</i> kecil sebesar 1024 bytes, sementara jika diakses melalui <i>filesystem</i> rancangan Sin dan Sei akan menjadi normal. Sebagai contoh, `Suatu_File.txt` berukuran 3 kiloBytes pada direktori asli akan menjadi 3 <i>file</i> kecil yakni:
   ```
   Suatu_File.txt.0000
   Suatu_File.txt.0001
@@ -453,33 +443,23 @@ Karena Sin masih super duper gabut akhirnya dia menambahkan sebuah fitur lagi pa
 
 ### 3A ###
 
-- <b>SOAL</b>
-
-  Jika sebuah direktori dibuat dengan awalan `A_is_a_`, maka direktori tersebut akan menjadi sebuah direktori spesial.
+- Jika sebuah direktori dibuat dengan awalan `A_is_a_`, maka direktori tersebut akan menjadi sebuah direktori spesial.
 
 ### 3B ###
 
-- <b>SOAL</b>
-
-  Jika sebuah direktori di-<i>rename</i> dengan memberi awalan `A_is_a_`, maka direktori tersebut akan menjadi sebuah direktori spesial.
+- Jika sebuah direktori di-<i>rename</i> dengan memberi awalan `A_is_a_`, maka direktori tersebut akan menjadi sebuah direktori spesial.
   
 ### 3C ###
 
-- <b>SOAL</b>
-
-  Apabila direktori yang terenkripsi di-<i>rename</i> dengan menghapus `A_is_a_` pada bagian awal nama folder maka direktori tersebut menjadi direktori normal.
+- Apabila direktori yang terenkripsi di-<i>rename</i> dengan menghapus `A_is_a_` pada bagian awal nama folder maka direktori tersebut menjadi direktori normal.
   
 ### 3D ###
 
-- <b>SOAL</b>
-
-  Direktori spesial adalah direktori yang mengembalikan enkripsi/<i>encoding</i> pada direktori `AtoZ_` maupun `RX_`, namun masing-masing aturan mereka tetap berjalan pada direktori di dalamnya (sifat rekursif `AtoZ_` dan `RX_` tetap berjalan pada sub-direktori).
+- Direktori spesial adalah direktori yang mengembalikan enkripsi/<i>encoding</i> pada direktori `AtoZ_` maupun `RX_`, namun masing-masing aturan mereka tetap berjalan pada direktori di dalamnya (sifat rekursif `AtoZ_` dan `RX_` tetap berjalan pada sub-direktori).
   
 ### 3E ###
 
-- <b>SOAL</b>
-
-  Pada direktori spesial, semua nama <i>file</i> (tidak termasuk ekstensi) pada FUSE akan berubah menjadi <i>lowercase insensitive</i> dan diberi ekstensi baru berupa nilai desimal dari biner perbedaan namanya.
+- Pada direktori spesial, semua nama <i>file</i> (tidak termasuk ekstensi) pada FUSE akan berubah menjadi <i>lowercase insensitive</i> dan diberi ekstensi baru berupa nilai desimal dari biner perbedaan namanya.
   
   Contohnya jika pada direktori asli nama <i>file</i>-nya adalah `FiLe_CoNtoH.txt` maka pada FUSE akan menjadi `file_contoh.txt.1321`. 1321 berasal dari biner 10100101001.
 
@@ -489,33 +469,23 @@ Untuk memudahkan dalam memonitor kegiatan pada <i>filesystem</i> mereka, Sin dan
 
 ### 4A ###
 
-- <b>SOAL</b>
-
-  <i>Log system</i> yang akan terbentuk bernama `SinSeiFS.log` pada direktori <i>home</i> pengguna (`/home/[user]/SinSeiFS.log`). <i>Log system</i> ini akan menyimpan daftar perintah <i>system call</i> yang telah dijalankan pada <i>filesystem</i>.
+- <i>Log system</i> yang akan terbentuk bernama `SinSeiFS.log` pada direktori <i>home</i> pengguna (`/home/[user]/SinSeiFS.log`). <i>Log system</i> ini akan menyimpan daftar perintah <i>system call</i> yang telah dijalankan pada <i>filesystem</i>.
   
 ### 4B ###
 
-- <b>SOAL</b>
-
-  Karena Sin dan Sei suka kerapian, maka <i>log</i> yang dibuat akan dibagi menjadi dua level, yaitu INFO dan WARNING.
+- Karena Sin dan Sei suka kerapian, maka <i>log</i> yang dibuat akan dibagi menjadi dua level, yaitu INFO dan WARNING.
 
 ### 4C ###
 
-- <b>SOAL</b>
-
-  Untuk <i>log</i> level WARNING, digunakan untuk mencatat <i>syscall</i> <b><i>rmdir</i></b> dan <b><i>unlink</i></b>.
+- Untuk <i>log</i> level WARNING, digunakan untuk mencatat <i>syscall</i> <b><i>rmdir</i></b> dan <b><i>unlink</i></b>.
   
 ### 4D ###
 
-- <b>SOAL</b>
-
-  Sisanya, akan dicatat pada level INFO.
+- Sisanya, akan dicatat pada level INFO.
 
 ### 4E ###
 
-- <b>SOAL</b>
-
-  Format untuk <i>logging</i> yaitu:
+- Format untuk <i>logging</i> yaitu:
   ```
   [Level]::[dd][mm][yyyy]-[HH]:[MM]:[SS]:[CMD]::[DESC :: DESC]
   ```
