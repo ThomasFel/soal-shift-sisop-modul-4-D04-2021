@@ -41,44 +41,44 @@ void atbashCode(char *string) {
     int i = 0;
 
     while (string[i] != '\0') {
-		if (string[i] >= 'A' && string[i] <= 'Z') {
-			string[i] = 'Z' + 'A' - string[i];
-		}
+	if (string[i] >= 'A' && string[i] <= 'Z') {
+	    string[i] = 'Z' + 'A' - string[i];
+	}
 
-		else if (string[i] >= 'a' && string[i] <= 'z') {
-			string[i] = 'z' + 'a' - string[i];
-		}
+	else if (string[i] >= 'a' && string[i] <= 'z') {
+	    string[i] = 'z' + 'a' - string[i];
+	}
 
-		i++;
+	i++;
     }
 }
 
 void rot13Code(char *string) {
-	int i = 0;
+    int i = 0;
 
     while (string[i] != '\0') {
-		if (string[i] >= 'A' && string[i] <= 'Z') {
-			if (string[i] + 13 > 'Z') {
-				string[i] -= 13;
-			}
+	if (string[i] >= 'A' && string[i] <= 'Z') {
+	    if (string[i] + 13 > 'Z') {
+		string[i] -= 13;
+	    }
 
-			else {
-				string[i] += 13;
-			}
+	    else {
+		string[i] += 13;
+	    }
 			
-		}
+	}
 
-		else if (string[i] >= 'a' && string[i] <= 'z') {
-			if (string[i] + 13 > 'z') {
-				string[i] -= 13;
-			}
+	else if (string[i] >= 'a' && string[i] <= 'z') {
+	    if (string[i] + 13 > 'z') {
+	        string[i] -= 13;
+	    }
 
-			else {
-				string[i] += 13;
-			}
-		}
+	    else {
+		string[i] += 13;
+	    }
+	}
 
-		i++;
+	i++;
     }
 }
 
@@ -88,17 +88,17 @@ void changePath(char *fpath, const char *path, int isWriteOperation, int isFileA
   	
     if (ptr != NULL) {
         if (strstr(ptr + 1, "/") != NULL) {
-	    	state = 1;
-		}
+	    state = 1;
+	}
     }
 
-	char *ptr2 = strstr(path, "/RX_");
+    char *ptr2 = strstr(path, "/RX_");
     int state2 = 0;
 
-	if (ptr2 != NULL) {
+    if (ptr2 != NULL) {
         if (strstr(ptr2 + 1, "/") != NULL) {
-	    	state2 = 1;
-		}
+	    state2 = 1;
+	}
     }
   	
     char fixPath[1000];
@@ -110,106 +110,106 @@ void changePath(char *fpath, const char *path, int isWriteOperation, int isFileA
     	char pathAtoZDirBuff[1000];
     	char pathEncryptedBuff[1000];
     	
-		strcpy(pathEncryptedBuff, ptr);
+	strcpy(pathEncryptedBuff, ptr);
     	strncpy(pathAtoZDirBuff, path, ptr - path);
     
-		if (isWriteOperation) {
-			char pathFileBuff[1000];
-			char pathDirBuff[1000];
+	if (isWriteOperation) {
+	    char pathFileBuff[1000];
+	    char pathDirBuff[1000];
 				
-			getDirAndFile(pathDirBuff, pathFileBuff, pathEncryptedBuff);
-			atbashCode(pathDirBuff);
-			sprintf(fixPath, "%s%s/%s", pathAtoZDirBuff, pathDirBuff, pathFileBuff);
-		}
-			
-		else if (isFileAsked) {
-			char pathFileBuff[1000];
-			char pathDirBuff[1000];
-			char pathExtBuff[1000];
-				
-			getDirAndFile(pathDirBuff, pathFileBuff, pathEncryptedBuff);
-				
-			char *whereIsExtension = strrchr(pathFileBuff, '.');
-			
-			if (whereIsExtension - pathFileBuff < 1) {
-				atbashCode(pathDirBuff);
-				atbashCode(pathFileBuff);
-				sprintf(fixPath, "%s%s/%s", pathAtoZDirBuff, pathDirBuff, pathFileBuff);
-			}
-				
-			else {
-				char pathJustFileBuff[1000];
-				
-				memset(pathJustFileBuff, 0, sizeof(pathJustFileBuff));
-				strcpy(pathExtBuff, whereIsExtension);
-				snprintf(pathJustFileBuff, whereIsExtension - pathFileBuff + 1, "%s", pathFileBuff);
-				atbashCode(pathDirBuff);
-				atbashCode(pathJustFileBuff);
-				sprintf(fixPath, "%s%s/%s%s", pathAtoZDirBuff, pathDirBuff, pathJustFileBuff, pathExtBuff);
-			}
-		}
-			
-		else {
-			atbashCode(pathEncryptedBuff);
-			sprintf(fixPath, "%s%s", pathAtoZDirBuff, pathEncryptedBuff);
-		}
+	    getDirAndFile(pathDirBuff, pathFileBuff, pathEncryptedBuff);
+	    atbashCode(pathDirBuff);
+	    sprintf(fixPath, "%s%s/%s", pathAtoZDirBuff, pathDirBuff, pathFileBuff);
 	}
+			
+	else if (isFileAsked) {
+	    char pathFileBuff[1000];
+	    char pathDirBuff[1000];
+	    char pathExtBuff[1000];
+				
+	    getDirAndFile(pathDirBuff, pathFileBuff, pathEncryptedBuff);
+				
+	    char *whereIsExtension = strrchr(pathFileBuff, '.');
+			
+	    if (whereIsExtension - pathFileBuff < 1) {
+	        atbashCode(pathDirBuff);
+		atbashCode(pathFileBuff);
+		sprintf(fixPath, "%s%s/%s", pathAtoZDirBuff, pathDirBuff, pathFileBuff);
+	    }
+				
+	    else {
+		char pathJustFileBuff[1000];
+				
+		memset(pathJustFileBuff, 0, sizeof(pathJustFileBuff));
+		strcpy(pathExtBuff, whereIsExtension);
+		snprintf(pathJustFileBuff, whereIsExtension - pathFileBuff + 1, "%s", pathFileBuff);
+		atbashCode(pathDirBuff);
+		atbashCode(pathJustFileBuff);
+		sprintf(fixPath, "%s%s/%s%s", pathAtoZDirBuff, pathDirBuff, pathJustFileBuff, pathExtBuff);
+	    }
+	}
+			
+	else {
+	    atbashCode(pathEncryptedBuff);
+	    sprintf(fixPath, "%s%s", pathAtoZDirBuff, pathEncryptedBuff);
+	}
+    }
 
-	else if (ptr2 != NULL && state2) {
-    	ptr2 = strstr(ptr2 + 1, "/");
+    else if (ptr2 != NULL && state2) {
+        ptr2 = strstr(ptr2 + 1, "/");
     	char pathRXDirBuff[1000];
     	char pathEncryptedBuff[1000];
     	
-		strcpy(pathEncryptedBuff, ptr2);
+	strcpy(pathEncryptedBuff, ptr2);
     	strncpy(pathRXDirBuff, path, ptr2 - path);
     
-		if (isWriteOperation) {
-			char pathFileBuff[1000];
-			char pathDirBuff[1000];
+	if (isWriteOperation) {
+	    char pathFileBuff[1000];
+	    char pathDirBuff[1000];
 				
-			getDirAndFile(pathDirBuff, pathFileBuff, pathEncryptedBuff);
-			atbashCode(pathDirBuff);
-			rot13Code(pathDirBuff);
-			sprintf(fixPath, "%s%s/%s", pathRXDirBuff, pathDirBuff, pathFileBuff);
-		}
-			
-		else if (isFileAsked) {
-			char pathFileBuff[1000];
-			char pathDirBuff[1000];
-			char pathExtBuff[1000];
-				
-			getDirAndFile(pathDirBuff, pathFileBuff, pathEncryptedBuff);
-				
-			char *whereIsExtension = strrchr(pathFileBuff, '.');
-			
-			if (whereIsExtension - pathFileBuff < 1) {
-				atbashCode(pathDirBuff);
-				rot13Code(pathDirBuff);
-				atbashCode(pathFileBuff);
-				rot13Code(pathFileBuff);
-				sprintf(fixPath, "%s%s/%s", pathRXDirBuff, pathDirBuff, pathFileBuff);
-			}
-				
-			else {
-				char pathJustFileBuff[1000];
-				
-				memset(pathJustFileBuff, 0, sizeof(pathJustFileBuff));
-				strcpy(pathExtBuff, whereIsExtension);
-				snprintf(pathJustFileBuff, whereIsExtension - pathFileBuff + 1, "%s", pathFileBuff);
-				atbashCode(pathDirBuff);
-				rot13Code(pathDirBuff);
-				atbashCode(pathJustFileBuff);
-				rot13Code(pathJustFileBuff);
-				sprintf(fixPath, "%s%s/%s%s", pathRXDirBuff, pathDirBuff, pathJustFileBuff, pathExtBuff);
-			}
-		}
-			
-		else {
-			atbashCode(pathEncryptedBuff);
-			rot13Code(pathEncryptedBuff);
-			sprintf(fixPath, "%s%s", pathRXDirBuff, pathEncryptedBuff);
-		}
+	    getDirAndFile(pathDirBuff, pathFileBuff, pathEncryptedBuff);
+	    atbashCode(pathDirBuff);
+	    rot13Code(pathDirBuff);
+	    sprintf(fixPath, "%s%s/%s", pathRXDirBuff, pathDirBuff, pathFileBuff);
 	}
+			
+	else if (isFileAsked) {
+	    char pathFileBuff[1000];
+	    char pathDirBuff[1000];
+	    char pathExtBuff[1000];
+				
+	    getDirAndFile(pathDirBuff, pathFileBuff, pathEncryptedBuff);
+				
+	    char *whereIsExtension = strrchr(pathFileBuff, '.');
+			
+	    if (whereIsExtension - pathFileBuff < 1) {
+		atbashCode(pathDirBuff);
+		rot13Code(pathDirBuff);
+		atbashCode(pathFileBuff);
+		rot13Code(pathFileBuff);
+		sprintf(fixPath, "%s%s/%s", pathRXDirBuff, pathDirBuff, pathFileBuff);
+	    }
+				
+	    else {
+		char pathJustFileBuff[1000];
+				
+		memset(pathJustFileBuff, 0, sizeof(pathJustFileBuff));
+		strcpy(pathExtBuff, whereIsExtension);
+		snprintf(pathJustFileBuff, whereIsExtension - pathFileBuff + 1, "%s", pathFileBuff);
+		atbashCode(pathDirBuff);
+		rot13Code(pathDirBuff);
+		atbashCode(pathJustFileBuff);
+		rot13Code(pathJustFileBuff);
+		sprintf(fixPath, "%s%s/%s%s", pathRXDirBuff, pathDirBuff, pathJustFileBuff, pathExtBuff);
+	    }
+	}    
+			
+	else {
+	    atbashCode(pathEncryptedBuff);
+	    rot13Code(pathEncryptedBuff);
+	    sprintf(fixPath, "%s%s", pathRXDirBuff, pathEncryptedBuff);
+	}
+    }
 	
     else {
     	strcpy(fixPath, path);
@@ -254,23 +254,23 @@ void fileLogv2 (char *cmd, char *from, char *to) {
     strcpy(ffrom, extensionFile(from));
     strcpy(tto, extensionFile(to));
 
-	FILE *file = fopen(logpath2, "a");
+    FILE *file = fopen(logpath2, "a");
     
-	if (strstr(tto, "AtoZ_") != NULL && strcmp(cmd, "RENAME") == 0) {
-		fprintf(file, "/home/thomasfelix/Downloads/%s -> /home/thomasfelix/Downloads/%s\n", ffrom, tto);
-	}
+    if (strstr(tto, "AtoZ_") != NULL && strcmp(cmd, "RENAME") == 0) {
+	fprintf(file, "/home/thomasfelix/Downloads/%s -> /home/thomasfelix/Downloads/%s\n", ffrom, tto);
+    }
 
-	else if (strstr(tto, "AtoZ_") != NULL && strcmp(cmd, "MKDIR") == 0) {
-		fprintf(file, "/home/thomasfelix/Downloads/ -> /home/thomasfelix/Downloads/%s\n", tto);
-	}
+    else if (strstr(tto, "AtoZ_") != NULL && strcmp(cmd, "MKDIR") == 0) {
+	fprintf(file, "/home/thomasfelix/Downloads/ -> /home/thomasfelix/Downloads/%s\n", tto);
+    }
 
-	if (strstr(tto, "RX_") != NULL && strcmp(cmd, "RENAME") == 0) {
-		fprintf(file, "%s::/home/thomasfelix/Downloads/%s -> /home/thomasfelix/Downloads/%s\n", cmd, ffrom, tto);
-	}
+    if (strstr(tto, "RX_") != NULL && strcmp(cmd, "RENAME") == 0) {
+	fprintf(file, "%s::/home/thomasfelix/Downloads/%s -> /home/thomasfelix/Downloads/%s\n", cmd, ffrom, tto);
+    }
 
-	else if (strstr(tto, "RX_") != NULL && strcmp(cmd, "MKDIR") == 0) {
-		fprintf(file, "%s::/home/thomasfelix/Downloads/ -> /home/thomasfelix/Downloads/%s\n", cmd, tto);
-	}
+    else if (strstr(tto, "RX_") != NULL && strcmp(cmd, "MKDIR") == 0) {
+	fprintf(file, "%s::/home/thomasfelix/Downloads/ -> /home/thomasfelix/Downloads/%s\n", cmd, tto);
+    }
 
     fclose(file);
 }
@@ -293,7 +293,7 @@ static int xmp_getattr(const char *path, struct stat *stbuf) {
     fileLog("INFO", "GETATTR", 1, desc);
 
     if (res == -1) {
-		return -errno;
+	return -errno;
     }
 
     return 0;
@@ -317,7 +317,7 @@ static int xmp_access(const char *path, int mask) {
     fileLog("INFO", "ACCESS", 1, desc);
 
     if (res == -1) {
-		return -errno;
+	return -errno;
     }
 
     return 0;
@@ -336,7 +336,7 @@ static int xmp_readlink(const char *path, char *buf, size_t size) {
     fileLog("INFO", "READLINK", 1, desc);
 
     if (res == -1) {
-		return -errno;
+	return -errno;
     }
 
     buf[res] = '\0';
@@ -357,98 +357,98 @@ static int xmp_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_
     dp = opendir(fpath);
 	
     if (dp == NULL) {
-		const char *desc[] = {path};
+	const char *desc[] = {path};
     	fileLog("INFO", "READDIR", 1, desc);
     
-		return -errno;
+	return -errno;
     }
 
     while ((de = readdir(dp)) != NULL) {
-		struct stat st;
+	struct stat st;
 		
-		memset(&st, 0, sizeof(st));
+	memset(&st, 0, sizeof(st));
 			
-		st.st_ino = de->d_ino;
-		st.st_mode = de->d_type << 12;
+	st.st_ino = de->d_ino;
+	st.st_mode = de->d_type << 12;
 			
-		if (strcmp(de->d_name, ".") == 0 || strcmp(de->d_name, "..") == 0) {
-			continue;
-		}
+	if (strcmp(de->d_name, ".") == 0 || strcmp(de->d_name, "..") == 0) {
+	    continue;
+	}
 			
-		if (strstr(path, "/AtoZ_") != NULL) {
-			char encodeThis[1000];
+	if (strstr(path, "/AtoZ_") != NULL) {
+	    char encodeThis[1000];
 				
-			strcpy(encodeThis, de->d_name);
+	    strcpy(encodeThis, de->d_name);
 				
-			if (de->d_type == DT_REG) {
-				char *whereIsExtension = strrchr(encodeThis, '.');
+	    if (de->d_type == DT_REG) {
+		char *whereIsExtension = strrchr(encodeThis, '.');
 					
-				if (whereIsExtension - encodeThis < 1) {
-					atbashCode(encodeThis);
-				}
-					
-				else {
-					char pathFileBuff[1000];
-					char pathExtBuff[1000];
-						
-					strcpy(pathExtBuff, whereIsExtension);
-					snprintf(pathFileBuff, whereIsExtension - encodeThis + 1, "%s", encodeThis);
-					atbashCode(pathFileBuff);
-					memset(encodeThis, 0, sizeof(encodeThis));
-					sprintf(encodeThis, "%s%s", pathFileBuff, pathExtBuff);
-				}
-			}   
-						
-			else if (de->d_type == DT_DIR) {
-				atbashCode(encodeThis);
-			}
-
-			if (filler(buf, encodeThis, &st, 0)) {
-				break;
-			}
+		if (whereIsExtension - encodeThis < 1) {
+		    atbashCode(encodeThis);
 		}
-		
-		else if (strstr(path, "/RX_") != NULL) {
-			char encodeThis[1000];
-				
-			strcpy(encodeThis, de->d_name);
-				
-			if (de->d_type == DT_REG) {
-				char *whereIsExtension = strrchr(encodeThis, '.');
 					
-				if (whereIsExtension - encodeThis < 1) {
-					atbashCode(encodeThis);
-					rot13Code(encodeThis);
-				}
-					
-				else {
-					char pathFileBuff[1000];
-					char pathExtBuff[1000];
-						
-					strcpy(pathExtBuff, whereIsExtension);
-					snprintf(pathFileBuff, whereIsExtension - encodeThis + 1, "%s", encodeThis);
-					atbashCode(pathFileBuff);
-					rot13Code(pathFileBuff);
-					memset(encodeThis, 0, sizeof(encodeThis));
-					sprintf(encodeThis, "%s%s", pathFileBuff, pathExtBuff);
-				}
-			}   
-						
-			else if (de->d_type == DT_DIR) {
-				atbashCode(encodeThis);
-				rot13Code(encodeThis);
-			}
-
-			if (filler(buf, encodeThis, &st, 0)) {
-				break;
-			}
-		}
-				
 		else {
-			if (filler(buf, de->d_name, &st, 0)) {
-				break;
-			}
+		    char pathFileBuff[1000];
+		    char pathExtBuff[1000];
+						
+		    strcpy(pathExtBuff, whereIsExtension);
+		    snprintf(pathFileBuff, whereIsExtension - encodeThis + 1, "%s", encodeThis);
+		    atbashCode(pathFileBuff);
+		    memset(encodeThis, 0, sizeof(encodeThis));
+		    sprintf(encodeThis, "%s%s", pathFileBuff, pathExtBuff);
 		}
+	    }   
+						
+	    else if (de->d_type == DT_DIR) {
+	        atbashCode(encodeThis);
+	    }
+
+	    if (filler(buf, encodeThis, &st, 0)) {
+		break;
+	    }
+	}
+		
+	else if (strstr(path, "/RX_") != NULL) {
+	    char encodeThis[1000];
+				
+	    strcpy(encodeThis, de->d_name);
+				
+	    if (de->d_type == DT_REG) {
+	        char *whereIsExtension = strrchr(encodeThis, '.');
+					
+		if (whereIsExtension - encodeThis < 1) {
+		    atbashCode(encodeThis);
+		    rot13Code(encodeThis);
+		}
+					
+		else {
+		    char pathFileBuff[1000];
+		    char pathExtBuff[1000];
+						
+		    strcpy(pathExtBuff, whereIsExtension);
+		    snprintf(pathFileBuff, whereIsExtension - encodeThis + 1, "%s", encodeThis);
+		    atbashCode(pathFileBuff);
+		    rot13Code(pathFileBuff);
+		    memset(encodeThis, 0, sizeof(encodeThis));
+		    sprintf(encodeThis, "%s%s", pathFileBuff, pathExtBuff);
+		}
+	    }   
+						
+	    else if (de->d_type == DT_DIR) {
+		atbashCode(encodeThis);
+		rot13Code(encodeThis);
+	    }
+
+	    if (filler(buf, encodeThis, &st, 0)) {
+		break;
+	    }
+	}
+				
+	else {
+	    if (filler(buf, de->d_name, &st, 0)) {
+		break;
+	    }
+	}
     }
 
     const char *desc[] = {path};
@@ -473,9 +473,9 @@ static int xmp_mkdir(const char *path, mode_t mode) {
     	}
     }
 
-	filePtr = strstr(ptr, "/RX_");
+    filePtr = strstr(ptr, "/RX_");
 
-	if (filePtr != NULL) {
+    if (filePtr != NULL) {
         if (filePtr - ptr == 0) {
       	    const char *desc[] = {path};
       	    fileLog("INFO", "MKDIR", 1, desc);
@@ -494,7 +494,7 @@ static int xmp_mkdir(const char *path, mode_t mode) {
     }
 
     if (res == -1) {
-		return -errno;
+	return -errno;
     }
 
     return 0;
@@ -577,16 +577,16 @@ static int xmp_rename(const char *from, const char *to) {
     }
 
     char *toPtr = strrchr(to, '/');
-	  char *toStartPtr = strstr(toPtr, "/RX_");
+    char *toStartPtr = strstr(toPtr, "/RX_");
 
-	  if (toStartPtr != NULL) {
-      if (toStartPtr - toPtr == 0) {
+    if (toStartPtr != NULL) {
+        if (toStartPtr - toPtr == 0) {
       	    const char *desc[] = {fto};
       	    fileLog("INFO", "RENAME", 1, desc);
     	}
     }
     
-	  toStartPtr = strstr(toPtr, "/AtoZ_");
+    toStartPtr = strstr(toPtr, "/AtoZ_");
   	
     if (toStartPtr != NULL) {
     	if (toStartPtr - toPtr == 0) {
@@ -607,7 +607,7 @@ static int xmp_rename(const char *from, const char *to) {
     }
 
     if (res == -1) {
-		return -errno;
+	return -errno;
     }
 
     return 0;
@@ -656,7 +656,7 @@ static int xmp_chmod(const char *path, mode_t mode) {
     fileLog("INFO", "CHMOD", 2, desc);
 
     if (res == -1) {
-		return -errno;
+	return -errno;
     }
 
     return 0;
@@ -686,7 +686,7 @@ static int xmp_chown(const char *path, uid_t uid, gid_t gid) {
     fileLog("INFO", "CHOWN", 3, desc);
 
     if (res == -1) {
-		return -errno;
+	return -errno;
     }
 
     return 0;
@@ -710,7 +710,7 @@ static int xmp_truncate(const char *path, off_t size) {
     fileLog("INFO", "TRUNCATE", 1, desc);
 
     if (res == -1) {
-		return -errno;
+	return -errno;
     }
 
     return 0;
@@ -735,7 +735,7 @@ static int xmp_utimens(const char *path, const struct timespec ts[2]) {
     fileLog("INFO", "UTIMENSAT", 1, desc);
 
     if (res == -1) {
-		return -errno;
+	return -errno;
     }
 
     return 0;
@@ -754,7 +754,7 @@ static int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi) 
     fileLog("INFO", "CREAT", 1, desc);
 
     if (res == -1) {
-		return -errno;
+	return -errno;
     }
 
     fi->fh = res;
@@ -792,15 +792,15 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset, stru
     int res;
 
     if (fi == NULL) {
-		fd = open(fpath, O_RDONLY);
+	fd = open(fpath, O_RDONLY);
     }
 	
     else {
-		fd = fi->fh;
+	fd = fi->fh;
     }
 
     if (fd == -1) {
-		return -errno;
+	return -errno;
     }
 
     res = pread(fd, buf, size, offset);
@@ -809,11 +809,11 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset, stru
     fileLog("INFO", "READ", 1, desc);
 
     if (res == -1) {
-		res = -errno;
+	res = -errno;
     }
 
     if (fi == NULL) {
-		close(fd);
+	close(fd);
     }
 
     return res;
@@ -829,15 +829,15 @@ static int xmp_write(const char *path, const char *buf, size_t size, off_t offse
     (void) fi;
 
     if (fi == NULL) {
-		fd = open(fpath, O_WRONLY);
+	fd = open(fpath, O_WRONLY);
     }
 	
     else {
-		fd = fi->fh;
+	fd = fi->fh;
     }
 
     if (fd == -1) {
-		return -errno;
+	return -errno;
     }
 
     res = pwrite(fd, buf, size, offset);
@@ -868,7 +868,7 @@ static int xmp_statfs(const char *path, struct statvfs *stbuf) {
     fileLog("INFO", "STATFS", 1, desc);
 
     if (res == -1) {
-		return -errno;
+	return -errno;
     }
 
     return 0;
@@ -888,24 +888,24 @@ static int xmp_release(const char *path, struct fuse_file_info *fi) {
 
 static const struct fuse_operations _oper = {
     .getattr	= xmp_getattr,
-    .access		= xmp_access,
+    .access	= xmp_access,
     .readlink	= xmp_readlink,
     .readdir	= xmp_readdir,
-    .mkdir		= xmp_mkdir,
+    .mkdir	= xmp_mkdir,
     .symlink	= xmp_symlink,
-    .unlink		= xmp_unlink,
-    .rmdir		= xmp_rmdir,
-    .rename		= xmp_rename,
-    .link		= xmp_link,
-    .chmod		= xmp_chmod,
-    .chown		= xmp_chown,
+    .unlink	= xmp_unlink,
+    .rmdir	= xmp_rmdir,
+    .rename	= xmp_rename,
+    .link	= xmp_link,
+    .chmod	= xmp_chmod,
+    .chown	= xmp_chown,
     .truncate	= xmp_truncate,
     .utimens	= xmp_utimens,
-    .open		= xmp_open,
+    .open	= xmp_open,
     .create 	= xmp_create,
-    .read		= xmp_read,
-    .write		= xmp_write,
-    .statfs		= xmp_statfs,
+    .read	= xmp_read,
+    .write	= xmp_write,
+    .statfs	= xmp_statfs,
     .release	= xmp_release,
 };
 
