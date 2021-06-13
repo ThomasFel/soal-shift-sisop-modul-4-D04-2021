@@ -5,6 +5,61 @@ Kelompok D-04
 - Muhammad Rizky Widodo (05111940000216)
 - Fiodhy Ardito Narawangsa (05111940000218)
 
+## PENDAHULUAN ##
+
+Sebelum mengerjakan soal, membuat terlebih dahulu FUSE <i>filesystem</i> dengan mengimplementasikan <i>system call</i> yang diperlukan untuk soal yang akan dikerjakan. Implementasi-implementasinya adalah sebagai berikut.
+```C
+static const struct fuse_operations _oper = {
+    .getattr	= xmp_getattr,
+    .access	= xmp_access,
+    .readlink	= xmp_readlink,
+    .readdir	= xmp_readdir,
+    .mkdir	= xmp_mkdir,
+    .symlink	= xmp_symlink,
+    .unlink	= xmp_unlink,
+    .rmdir	= xmp_rmdir,
+    .rename	= xmp_rename,
+    .link	= xmp_link,
+    .chmod	= xmp_chmod,
+    .chown	= xmp_chown,
+    .truncate	= xmp_truncate,
+    .utimens	= xmp_utimens,
+    .open	= xmp_open,
+    .create 	= xmp_create,
+    .read	= xmp_read,
+    .write	= xmp_write,
+    .statfs	= xmp_statfs,
+    .release	= xmp_release,
+};
+```
+
+Seluruh <i>system call</i> tersebut pada dasarnya hanya memanggil <i>system call</i> Linux dengan mengganti <b><i>path</i></b> yang diinputkan <i>system call</i> tersebut menjadi <b><i>path</i></b> pada <i>mount</i>-<i>point</i>-nya, yaitu variabel `dirpath`.
+  - `xmp_getattr()`: untuk mendapatkan <b><i>stat</i></b> dari <b><i>path</i></b> yang diinputkan.
+  - `xmp_access()`: untuk mengakses <b><i>path</i></b> yang diinputkan.
+  - `xmp_readlink()`: untuk membaca <i>symbolic link</i> dari <b><i>path</i></b>.
+  - `xmp_mkdir()`: untuk membuat direktori pada <b><i>path</i></b>.
+  - `xmp_symlink`: untuk membuat <i>symbolic link</i> pada <b><i>path</i></b>.
+  - `xmp_unlink()`: untuk menghapus sebuah <i>file</i> dari <b><i>path</i></b>.
+  - `xmp_rmdir()`: untuk menghapus direktori pada <b><i>path</i></b>.
+  - `xmp_rename()`: untuk me-<i>rename</i> dari <b><i>path</i></b> awal menjadi <b><i>path</i></b> tujuan.
+  - `xmp_link()`: untuk membuat <i>hard</i>-<i>link</i> pada <b><i>path</i></b>.
+  - `xmp_chmod()`: untuk mengubah mode (hak akses) dari <b><i>path</i></b>.
+  - `xmp_chown()`: untuk mengubah kepemilikan (user dan <i>group</i>) dari <b><i>path</i></b>.
+  - `xmp_truncate()`: untuk melakukan <i>truncate</i> (membesarkan atau mengecilkan <i>size</i>) dari <b><i>path</i></b>.
+  - `xmp_utimens()`: untuk mengubah status <i>time</i> dari <b><i>path</i></b>.
+  - `xmp_open()`: untuk membuka <b><i>path</i></b>.
+  - `xmp_create()`: untuk membuat <b><i>path</i></b> berdasarkan mode yang diinputkan.
+  - `xmp_read()`: untuk membaca isi dari <b><i>path</i></b>.
+  - `xmp_write()`: untuk menulis (<i>writing</i>) ke dalam <b><i>path</i></b>.
+  - `xmp_statfs()`: untuk melakukan <b><i>stat</i></b> terhadap <i>file</i> yang diinputkan.
+  - `xmp_release`: untuk <i>release</i> memori yang dialokasikan untuk <i>system call</i> `xmp_open()`.
+ 
+```C
+static const char *dirpath = "/home/thomasfelix/Downloads";
+```
+
+Nantinya, ketika <i>filesystem</i> di-<i>mount</i> akan memiliki <i>root</i> pada `dirpath` tersebut. Lalu, <i>filesystem</i> tersebut bisa diedit untuk melakukan operasi sesuai keinginan untuk menjawab soal Shift. Mengambil referensi dari [passthrough.c](https://github.com/libfuse/libfuse/blob/master/example/passthrough.c "passthrough.c").
+
 ## SOAL 1 ##
 
 Di suatu jurusan, terdapat admin lab baru yang super duper gabut, ia bernama Sin. Sin baru menjadi admin di lab tersebut selama 1 bulan. Selama sebulan tersebut ia bertemu orang-orang hebat di lab tersebut, salah satunya yaitu Sei. Sei dan Sin akhirnya berteman baik. Karena belakangan ini sedang ramai tentang kasus keamanan data, mereka berniat membuat <i>filesystem</i> dengan metode <i>encode</i> yang mutakhir. Berikut adalah <i>filesystem</i> rancangan Sin dan Sei:
@@ -47,6 +102,58 @@ Filesystem berfungsi normal layaknya Linux pada umumnya, mount source (root) fil
 - <b>SOAL</b>
 
   Metode <i>encode</i> pada suatu direktori juga berlaku terhadap direktori yang ada di dalamnya (rekursif).
+
+## JAWABAN ##
+
+Membuat enkripsi yaitu dengan cara tiap <i>system call</i> `xmp_readdir()` membaca sebuah direktori yang memiliki awalan `/AtoZ`, maka nama yang diinputkan pada <i>buffer</i> akan dienkripsi terlebih dahulu. Untuk mengatasi <i>entry</i> yang telah terenkripsi, seluruh <i>system call</i> akan mengecek terlebih dahulu apakah <i>path</i> yang diinputkan memiliki direktori dengan awalan `/AtoZ`. Jika ada maka akan melakukan dekripsi pada <i>path</i> tersebut.
+
+Membuat beberapa fungsi yang akan digunakan untuk menyelesaikan soal ini.
+  - `atbashCode()`: untuk melakukan enkripsi maupun dekripsi menggunakan metode <b>Atbash Cipher</b>.
+  - `getDirAndFile()`: untuk mendapatkan <i><b>directory</b></i> dan <i><b>filename</b></i> dari <i><b>path</b></i> yang telah diinputkan.
+  - `changePath()`: untuk mengganti <i><b>path</b></i> yang diinputkan menjadi <i>mount</i>-<i>mount</i> yang telah diset. Fungsi ini juga berfungsi untuk mengecek apakah perlu melakukan dekripsi (direktori berawalan `/AtoZ`) pada <i><b>path</b></i> yang diinputkan. Dan juga untuk melakukan enkripsi, melakukannya langsung pada <i>system call</i> `xmp_readdir()`.
+
+`Fungsi atbashCode()`
+```C
+void atbashCode(char *string) {
+    int i = 0;
+
+    while (string[i] != '\0') {
+	if (string[i] >= 'A' && string[i] <= 'Z') {
+	    string[i] = 'Z' + 'A' - string[i];
+	}
+
+	else if (string[i] >= 'a' && string[i] <= 'z') {
+	    string[i] = 'z' + 'a' - string[i];
+	}
+
+	i++;
+    }
+}
+```
+Fungsi ini memiliki satu argumen, yaitu `string` sebagai alamat yang akan dienkripsi ataupun didekripsi. Untuk metode <b>Atbash Cipher</b> bisa dilihat pada referensi-referensi yang ada di internet, salah satunya [di sini](http://www.cprograms4future.com/p/program-213atbash-cipher_3.html, "di sini"). Logika yang digunakan untuk proses enkripsi dan dekripsi sama, jadi tidak perlu membuat fungsi lagi atau memisahkan proses enkripsi dan dekripsi.
+
+`Fungsi getDirAndFile()`
+```C
+void getDirAndFile(char *dir, char *file, char *path) {
+    char buff[1000];
+  	
+    memset(dir, 0, 1000);
+    memset(file, 0, 1000);
+    strcpy(buff, path);
+  	
+    char *token = strtok(buff, "/");
+	
+    while(token != NULL) {
+        sprintf(file, "%s", token);
+    	token = strtok(NULL, "/");
+	
+	if (token != NULL) {
+    	    sprintf(dir, "%s/%s", dir, file);
+    	}
+    }
+}
+```
+Fungsi ini akan membagi `path` yang diinputkan menjadi `dir` dan `file` berdasarkan lokasi `/` terakhir. Pertama, deklarasi variabel `buff` untuk menyimpan `path`, lalu agar tidak mengubah isinya memakai `strtok()`. `dir` dan `file` di-`memset()` supaya isinya menjadi kosong. Kemudian, `path` akan di-`strcpy()` ke dalam `buff`. Buat `token` dengan `strtok()` pada `buff` dengan <i>delimiter</i> `"/"`, diiterasi untuk masing-masing `token`. Tiap iterasi akan meng-<i>copy</i> isi `token` ke dalam variabel `file` menggunakan `sprintf()`, lalu, `token` akan diiterasi ke `token` selanjutnya. Di akhir iterasi akan dicek apakah `token` tersebut belum `token` terakhir, jika belum, maka akan <i>update</i> variabel `dir` agar menjadi `dir/file` menggunakan `sprintf()`
 
 ## SOAL 2 ##
 
