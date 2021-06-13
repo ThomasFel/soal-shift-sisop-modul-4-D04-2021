@@ -100,7 +100,8 @@ Membuat enkripsi yaitu dengan cara tiap <i>system call</i> `xmp_readdir()` memba
 Membuat beberapa fungsi yang akan digunakan untuk menyelesaikan soal ini.
   - `atbashCode()`: untuk melakukan enkripsi maupun dekripsi menggunakan metode <b>Atbash Cipher</b>.
   - `getDirAndFile()`: untuk mendapatkan <i><b>directory</b></i> dan <i><b>filename</b></i> dari <i><b>path</b></i> yang telah diinputkan.
-  - `changePath()`: untuk mengganti <i><b>path</b></i> yang diinputkan menjadi <i>mount</i>-<i>mount</i> yang telah diset. Fungsi ini juga berfungsi untuk mengecek apakah perlu melakukan dekripsi (direktori berawalan `/AtoZ`) pada <i><b>path</b></i> yang diinputkan. Dan juga untuk melakukan enkripsi, melakukannya langsung pada <i>system call</i> `xmp_readdir()`.
+  - `changePath()`: untuk mengganti <i><b>path</b></i> yang diinputkan menjadi <i>mount</i>-<i>mount</i> yang telah diset. Fungsi ini juga berfungsi untuk mengecek apakah perlu melakukan dekripsi (direktori berawalan `/AtoZ` atau `/RX`) pada <i><b>path</b></i> yang diinputkan. Dan juga untuk melakukan enkripsi, melakukannya langsung pada <i>system call</i> `xmp_readdir()`.
+  - `extensionFile()`: untuk mendapatkan nama <i>file</i> dari sebuah <i>path</i> yang akan digunakan pada [soal.1d](#1d "Goto 1d").
 
 `Fungsi atbashCode`
 ```C
@@ -368,7 +369,7 @@ static int xmp_mkdir(const char *path, mode_t mode) {
     return 0;
 }
 ```
-Pada <i>system call</i> di atas dilakukan `changePath()` terhadap `path` untuk mendapatkan `fpath`, argument `isWriteOperation` sama dengan 1 karena <b>mkdir</b> merupakan operasi <i>write</i> (membuat). Setiap pembuatan direktori `/AtoZ_` harus di-log. Untuk melakukan <i>logging</i>, kami menggunakan fungsi `fileLog` yang akan dijelaskan pada [soal 4](#soal-4 "Goto 4"). Setelah itu <b>mkdir</b> akan dijalankan seperti biasa dan hasilnya akan di-<i>return</i>. <i>Logging</i> tersebut juga dilakukan pada <i>system call</i> `xmp_rename()` dengan metode yang sama.
+Pada <i>system call</i> di atas dilakukan `changePath()` terhadap `path` untuk mendapatkan `fpath`, argument `isWriteOperation` sama dengan 1 karena <b>mkdir</b> merupakan operasi <i>write</i> (membuat). Setiap pembuatan direktori `/AtoZ_` harus di-<i>log</i>. Untuk melakukan <i>logging</i>, kami menggunakan fungsi `fileLog` yang akan dijelaskan pada [soal 4](#soal-4 "Goto 4"). Setelah itu <b>mkdir</b> akan dijalankan seperti biasa dan hasilnya akan di-<i>return</i>. <i>Logging</i> tersebut juga dilakukan pada <i>system call</i> `xmp_rename()` dengan metode yang sama.
 
 `Implementasi system call read operation (xmp_getattr)`
 ```C
@@ -397,6 +398,76 @@ static int xmp_getattr(const char *path, struct stat *stbuf) {
 }
 ```
 Pada <i>system call</i> di atas dilakukan `changePath()` terhadap `path` untuk mendapatkan `fpath`. Karena ketika <b><i>path</i></b> yang dimasukkan tidak tahu apakah <i>file</i>-nya merupakan <i>file</i> biasa atau malah direktori, maka ubah terlebih dahulu dengan asumsi bahwa <b><i>path</i></b> tersebut merupakan <i>file</i> sehingga argumen `isFileAsked` sama dengan 1. Lalu, akan dicoba di-<i>access</i>, jika tidak bisa, maka akan dilakukan `changePath` kembali dengan argumen `isFileAsked` sama dengan 0 (direktori). Proses <b>getattr</b> akan berlangsung pada `fpath` tersebut.
+
+`Fungsi extensionFile`
+```C
+char *extensionFile(char *path) {
+    char *temp = strrchr(path, '/');
+    return temp + 1;
+}
+```
+Fungsi di atas digunakan untuk mendapatkan nama <i>file</i> dari sebuah <i>path</i>. `strrchr` berfungsi guna mendapatkan posisi terakhir dari sebuah karakter. Fungsi ini nantinya akan dipakai untuk pencatatan <i>log</i> pada [soal.1d](#1d "Goto 1d").
+
+`Fungsi fileLogv2`
+```C
+void fileLogv2 (char *cmd, char *from, char *to) {
+    char ffrom[1000], tto[1000];
+    memset(ffrom, 0, sizeof(ffrom));
+    memset(tto, 0, sizeof(tto));
+
+    strcpy(ffrom, extensionFile(from));
+    strcpy(tto, extensionFile(to));
+
+    FILE *file = fopen(logpath2, "a");
+    
+    if (strstr(tto, "AtoZ_") != NULL && strcmp(cmd, "RENAME") == 0) {
+	fprintf(file, "/home/thomasfelix/Downloads/%s -> /home/thomasfelix/Downloads/%s\n", ffrom, tto);
+    }
+
+    else if (strstr(tto, "AtoZ_") != NULL && strcmp(cmd, "MKDIR") == 0) {
+	fprintf(file, "/home/thomasfelix/Downloads/ -> /home/thomasfelix/Downloads/%s\n", tto);
+    }
+
+    . . .
+    
+    fclose(file);
+}
+```
+Untuk pencatatan <i>log</i>, membuat fungsi baru dan berbeda dengan [soal 4](#soal-4 "Goto 4"). Deklarasikan variabel `ffrom` dan `tto` untuk menampung <i>path</i> asal dan <i>path</i> tujuan. `ffrom` dan `tto` di-`memset` agar isinya kosong. Kemudian, fungsi akan membuka dan membuat (jika belum ada) <i>file log</i> pada `logpath2` menggunakan `fopen` ke dalam <i>pointer</i> FILE `*file`. Menggunakan pengondisian jika <i>path</i> tujuan adalah `AtoZ_` dan <i>command</i> <b>rename</b> dan <b>mkdir</b> untuk membedakan format output <i>log</i>. Terakhir, pakai `fprintf` untuk <i>print</i> output ke dalam `file` sesuai permintaan soal. Setelah <i>log</i> selesai, `file` akan di `fclose` dan untuk <i>system call</i> <b>rename</b> dan <b>mkdir</b> akan memanggil fungsi `fileLogv2()` untuk melakukan <i>logging</i> tersediri (berbeda dengan [soal 4](#soal-4 "Goto 4")).
+
+Berikut adalah pemanggilan fungsi `fileLogv2()` pada <i>system call</i>.
+
+`Fungsi xmp_mkdir`
+```C
+static int xmp_mkdir(const char *path, mode_t mode) {
+    . . .
+    
+    const char *desc[] = {path};
+    fileLog("INFO", "MKDIR", 1, desc);
+    
+    if (strstr(path, "/AtoZ_") != NULL || strstr(path, "/RX_") != NULL) {
+        fileLogv2("MKDIR", fpath, fpath);
+    }
+    
+    . . .
+}
+```
+
+`Fungsi xmp_rename`
+```C
+static int xmp_rename(const char *from, const char *to) {
+    . . .
+    
+    const char *desc[] = {from, to};
+    fileLog("INFO", "RENAME", 2, desc);
+
+    if (strstr(fto, "/AtoZ_") != NULL || strstr(fto, "/RX_") != NULL) {
+        fileLogv2("RENAME", ffrom, fto);
+    }
+    
+    . . .
+}
+```
 
 ### OUTPUT ###
 
@@ -569,6 +640,56 @@ static int xmp_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_
 }
 ```
 <i>System call</i> `xmp_readdir()` ini digunakan untuk melakukan enkripsi pada <i>entry</i> yang berada pada direktori `/RX_`. Pada fungsi di atas, jika pada <i>path</i> terdapat `/RX_`, maka akan dilakukan enkripsi. Solusi yang digunakan selanjutnya sama persis dengan [soal 1](#soal-1 "Goto 1"), serta menambahkan fungsi `rot13Code()` setelah `atbashCode()` pada beberapa bagian kode untuk penyelesaian [soal.2a](#2a "Goto 2a").
+
+`Fungsi fileLogv2`
+```C
+void fileLogv2 (char *cmd, char *from, char *to) {
+    . . .
+    
+    if (strstr(tto, "RX_") != NULL && strcmp(cmd, "RENAME") == 0) {
+	fprintf(file, "%s::/home/thomasfelix/Downloads/%s -> /home/thomasfelix/Downloads/%s\n", cmd, ffrom, tto);
+    }
+
+    else if (strstr(tto, "RX_") != NULL && strcmp(cmd, "MKDIR") == 0) {
+	fprintf(file, "%s::/home/thomasfelix/Downloads/ -> /home/thomasfelix/Downloads/%s\n", cmd, tto);
+    }
+
+    fclose(file);
+}
+```
+Solusi yang digunakan sama dengan [soal.1d](#1d "Goto 1d"), hanya menambahkan pengondisian jika <i>path</i> tujuan adalah `RX_`. Dan pula pada fungsi `xmp_rename` dan `xmp_mkdir` pengondisian agar menerima inputan <i>path</i> tujuan `/RX_`.
+
+`Fungsi xmp_mkdir`
+```C
+static int xmp_mkdir(const char *path, mode_t mode) {
+    . . .
+    
+    const char *desc[] = {path};
+    fileLog("INFO", "MKDIR", 1, desc);
+    
+    if (strstr(path, "/AtoZ_") != NULL || strstr(path, "/RX_") != NULL) {
+        fileLogv2("MKDIR", fpath, fpath);
+    }
+    
+    . . .
+}
+```
+
+`Fungsi xmp_rename`
+```C
+static int xmp_rename(const char *from, const char *to) {
+    . . .
+    
+    const char *desc[] = {from, to};
+    fileLog("INFO", "RENAME", 2, desc);
+
+    if (strstr(fto, "/AtoZ_") != NULL || strstr(fto, "/RX_") != NULL) {
+        fileLogv2("RENAME", ffrom, fto);
+    }
+    
+    . . .
+}
+```
 
 ### OUTPUT ###
 
