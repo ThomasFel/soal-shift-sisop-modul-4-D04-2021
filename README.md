@@ -58,7 +58,7 @@ Seluruh <i>system call</i> tersebut pada dasarnya hanya memanggil <i>system call
 static const char *dirpath = "/home/thomasfelix/Downloads";
 ```
 
-Nantinya, ketika <i>filesystem</i> di-<i>mount</i> akan memiliki <i>root</i> pada `dirpath` tersebut. Lalu, <i>filesystem</i> tersebut bisa diedit untuk melakukan operasi sesuai keinginan untuk menjawab soal Shift. Mengambil referensi dari [passthrough.c](https://github.com/libfuse/libfuse/blob/master/example/passthrough.c "passthrough.c").
+Nantinya, ketika <i>filesystem</i> di-<i>mount</i> akan memiliki <i>root</i> pada `dirpath` tersebut. Lalu, <i>filesystem</i> tersebut bisa diedit untuk melakukan operasi sesuai keinginan untuk menjawab soal Shift. Mengambil referensi dari [passthrough.c](https://github.com/libfuse/libfuse/blob/master/example/passthrough.c "Goto passthrough.c").
 
 ## SOAL 1 ##
 
@@ -120,7 +120,7 @@ void atbashCode(char *string) {
     }
 }
 ```
-Fungsi ini memiliki satu argumen, yaitu `string` sebagai alamat yang akan dienkripsi ataupun didekripsi. Untuk metode <b>Atbash Cipher</b> bisa dilihat pada referensi-referensi yang ada di internet, salah satunya [di sini](http://www.cprograms4future.com/p/program-213atbash-cipher_3.html, "di sini"). Logika yang digunakan untuk proses enkripsi dan dekripsi sama, jadi tidak perlu membuat fungsi lagi atau memisahkan proses enkripsi dan dekripsi.
+Fungsi ini memiliki satu argumen, yaitu `string` sebagai alamat yang akan dienkripsi ataupun didekripsi. Untuk metode <b>Atbash Cipher</b> bisa dilihat pada referensi-referensi yang ada di internet, salah satunya [di sini](http://www.cprograms4future.com/p/program-213atbash-cipher_3.html "goto di sini"). Logika yang digunakan untuk proses enkripsi dan dekripsi sama, jadi tidak perlu membuat fungsi lagi atau memisahkan proses enkripsi dan dekripsi.
 
 `Fungsi getDirAndFile`
 ```C
@@ -162,7 +162,7 @@ void changePath(char *fpath, const char *path, int isWriteOperation, int isFileA
 ```
 Fungsi ini didefinisikan dengan empat argumen. Argumen pertama, `*fpath` untuk <i>buffer</i> hasil perubahan `path` menjadi <i>path</i> yang baru. Argumen kedua, `path` untuk diinput ke masing-masing <i>system call</i> dan mengubah <i>path</i>-nya sesuai <b><i>mount</i>-<i>point</i></b> atau metode enkripsi <b>Atbash Cipher</b>. Argumen ketiga, `isWriteOperation` untuk mendefinisikan <i>system call</i> yang memanggil fungsi apakah operasi <i>write</i> (karena ketika ingin membuat <i>file</i> pada direktori yang terenkripsi dengan `/AtoZ`, maka <i>path</i> untuk <i>filename</i> yang di-<i>write</i> tidak dienkripsi maupun dienkripsi). Argument keempat, `isFileAsked` untuk mendefinisikan apakah <i>system call</i> yang memanggil fungsi ingin melakukan dekripsi pada sebuah <i>file</i> atau direktori (pada direktori, dekripsi akan dilakukan langsung, sementara pada <i>file</i> harus mengecek ekstensinya terlebih dahulu.
 
-Variabel `*ptr` digunakan untuk menunjuk posisi `/AtoZ` pada <b><i>path</i></b> menggunakan fungsi `strstr()` (contoh: `/contoh/AtoZ_Vivy/wangy` -> `/AtoZ_Vivy/wangy`). Deklarasi variabel `state` untuk memastikan apakah <b><i>path</i></b> yang diinputkan berisi direktori di dalamnya atau hanya `/AtoZ` (contoh: `/contoh/AtoZ_Vivy` tidak akan didekripsi, sementara `/contoh/AtoZ_Vivy/wangy` akan didekripsi). Lalu cek apakah <i>string</i> setelah karakter pertama dari `ptr` memiliki karakter `/`, jika iya, maka `state` akan diset menjadi 1.
+Variabel `*ptr` digunakan untuk menunjuk posisi `/AtoZ_` pada <b><i>path</i></b> menggunakan fungsi `strstr()` (contoh: `/contoh/AtoZ_banget/watu` -> `/AtoZ_banget/watu`). Deklarasi variabel `state` untuk memastikan apakah <b><i>path</i></b> yang diinputkan berisi direktori di dalamnya atau hanya `/AtoZ_` (contoh: `/contoh/AtoZ_banget` tidak akan didekripsi, sementara `/contoh/AtoZ_banget/watu` akan didekripsi). Lalu cek apakah <i>string</i> setelah karakter pertama dari `ptr` memiliki karakter `/`, jika iya, maka `state` akan diset menjadi 1.
 
 ```C
 char fixPath[1000];
@@ -182,7 +182,7 @@ if (ptr != NULL && state) {
 
 . . .
 ```
-Pendefinisian <i>buffer</i> `fixpath()` yang digunakan untuk menyimpan <i>proccessed path</i> dari tiap kondisi yang berbeda. `if()` akan berjalan ketika terdapat <i>substring</i> `/AtoZ_` pada <b><i>path</i></b> dengan kondisi `state` <b>TRUE</b>. `ptr` akan diset menjadi <i>path</i> setelah `/AtoZ_` (contoh: `/AtoZ_Vivy/wangy` akan menjadi `/wangy` pada `ptr`). Lalu didefinisikan juga `pathEncryptedBuff` untuk menyimpan <i>path</i> `*ptr` yang telah dicari menggunakan `strcpy()`, dan juga `pathAtoZDirBuff` untuk menyimpan <b><i>path</i></b> yang tidak didekripsi menggunakan `strncpy()` dari karakter pertama <b><i>path</i></b> sampai `ptr` - `path` (contoh: `/dir/AtoZ_Vivy/wangy` akan disimpan menjadi `/dir/AtoZ_Vivy` pada `pathAtoZDirBuff` dan `/wangy` pada `pathEncryptedBuff`).
+Pendefinisian <i>buffer</i> `fixpath()` yang digunakan untuk menyimpan <i>proccessed path</i> dari tiap kondisi yang berbeda. `if()` akan berjalan ketika terdapat <i>substring</i> `/AtoZ_` pada <b><i>path</i></b> dengan kondisi `state` <b>TRUE</b>. `ptr` akan diset menjadi <i>path</i> setelah `/AtoZ_` (contoh: `/AtoZ_banget/watu` akan menjadi `/watu` pada `ptr`). Lalu didefinisikan juga `pathEncryptedBuff` untuk menyimpan <i>path</i> `*ptr` yang telah dicari menggunakan `strcpy()`, dan juga `pathAtoZDirBuff` untuk menyimpan <b><i>path</i></b> yang tidak didekripsi menggunakan `strncpy()` dari karakter pertama <b><i>path</i></b> sampai `ptr` - `path` (contoh: `/dir/AtoZ_banget/watu` akan disimpan menjadi `/dir/AtoZ_banget` pada `pathAtoZDirBuff` dan `/watu` pada `pathEncryptedBuff`).
 
 ```C
 if (isWriteOperation) {
@@ -255,7 +255,7 @@ else {
 
 Selanjutnya adalah mengubah `fixPath` menjadi `fpath` dengan mengisi <b><i>mount</i></b>-<b><i>point</i></b> yang telah dideklarasi pada variabel `dirpath`. Caranya yaitu jika <b><i>path</i></b> yang diinputkan merupakan <i>root</i> `"/"`, maka `dirpath` langsung di-<i>copy</i> ke dalam `fpath`, jika bukan, maka akan diformat agar `fixPath` menuju <b><i>mount</i></b>-<b><i>point</i></b> yang terletak pada `dirpath`.
 
-`System call readdir`
+`System call xmp_readdir`
 ```C
 static int xmp_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offset, struct fuse_file_info *fi) {
 char fpath[1000];
@@ -368,7 +368,7 @@ static int xmp_mkdir(const char *path, mode_t mode) {
     return 0;
 }
 ```
-Pada <i>system call</i> di atas dilakukan `changePath()` terhadap `path` untuk mendapatkan `fpath`, argument `isWriteOperation` sama dengan 1 karena <b>mkdir</b> merupakan operasi <i>write</i> (membuat). Setiap pembuatan direktori `/AtoZ_` harus di-log. Untuk melakukan <i>logging</i>, kami menggunakan fungsi `fileLog` yang akan dijelaskan pada soal 4. Setelah itu <b>mkdir</b> akan dijalankan seperti biasa dan hasilnya akan di-<i>return</i>. <i>Logging</i> tersebut juga dilakukan pada <i>system call</i> `xmp_rename()` dengan metode yang sama.
+Pada <i>system call</i> di atas dilakukan `changePath()` terhadap `path` untuk mendapatkan `fpath`, argument `isWriteOperation` sama dengan 1 karena <b>mkdir</b> merupakan operasi <i>write</i> (membuat). Setiap pembuatan direktori `/AtoZ_` harus di-log. Untuk melakukan <i>logging</i>, kami menggunakan fungsi `fileLog` yang akan dijelaskan pada [soal 4](#soal-4 "Goto 4"). Setelah itu <b>mkdir</b> akan dijalankan seperti biasa dan hasilnya akan di-<i>return</i>. <i>Logging</i> tersebut juga dilakukan pada <i>system call</i> `xmp_rename()` dengan metode yang sama.
 
 `Implementasi system call read operation (xmp_getattr)`
 ```C
@@ -400,11 +400,11 @@ Pada <i>system call</i> di atas dilakukan `changePath()` terhadap `path` untuk m
 
 ### OUTPUT ###
 
-### KESULITAN ###
+### KENDALA ###
 
 - Kesulitan sewaktu <i>debug</i>.
 - Kesulitan sewaktu enkripsi dan dekripsi yang menyebabkan <i>file</i> atau direktori tidak terbaca.
-- Masih ada <i>warning</i> untuk alokasi memori variabel pada program, namun progam masih bisa berjalan dengan baik. 
+- Masih ada <i>warning</i> untuk alokasi memori variabel pada fungsi, namun program masih bisa berjalan dengan baik. 
 
 ## SOAL 2 ##
 
@@ -437,6 +437,146 @@ Selain itu Sei mengusulkan untuk membuat metode enkripsi tambahan agar data pada
   
   Ketika diakses melalui <i>filesystem</i> hanya akan muncul `Suatu_File.txt`.
 
+### JAWABAN ###
+
+Metode enkripsi dan dekripsi yang digunakan pada soal ini sama seperti [soal.1a](#1a "Goto 1a"). Hanya pada [soal.2a](#2a "Goto 2a"), dilakukan enkripsi dan dekripsi 2×, yaitu <b>Atbash Cipher</b> dan <b>ROT13</b> sehingga hanya perlu menambah kondisi ketika direktori mengandung `/RX_` di fungsi `changePath()` dan `readdir()` dan membuat fungsi untuk enkripsi dan dekripsi <b>ROT13</b> yang baru.
+
+`Fungsi rot13Code`
+```C
+void rot13Code(char *string) {
+    int i = 0;
+
+    while (string[i] != '\0') {
+	if (string[i] >= 'A' && string[i] <= 'Z') {
+	    if (string[i] + 13 > 'Z') {
+		string[i] -= 13;
+	    }
+
+	    else {
+		string[i] += 13;
+	    }
+			
+	}
+
+	else if (string[i] >= 'a' && string[i] <= 'z') {
+	    if (string[i] + 13 > 'z') {
+	        string[i] -= 13;
+	    }
+
+	    else {
+		string[i] += 13;
+	    }
+	}
+
+	i++;
+    }
+}
+```
+Fungsi ini memiliki satu argumen, yaitu `string` sebagai alamat yang akan dienkripsi ataupun didekripsi. Untuk metode <b>ROT13</b> bisa dilihat pada referensi-referensi yang ada di internet, salah satunya [di sini](https://github.com/infosec-au/learning-c/blob/master/Week4/ROT13.c "di sini"). Logika yang digunakan untuk proses enkripsi dan dekripsi sama, jadi tidak perlu membuat fungsi lagi atau memisahkan proses enkripsi dan dekripsi.
+
+`Fungsi changePath()`
+```C
+void changePath(char *fpath, const char *path, int isWriteOperation, int isFileAsked) {
+    . . .
+    
+    char *ptr2 = strstr(path, "/RX_");
+    int state2 = 0;
+
+    if (ptr2 != NULL) {
+        if (strstr(ptr2 + 1, "/") != NULL) {
+	    state2 = 1;
+	}
+    }
+    
+    . . .
+}
+```
+Variabel `*ptr2` digunakan untuk menunjuk posisi `/RX_` pada <b><i>path</i></b> menggunakan fungsi `strstr()` (contoh: `/contoh/RX_King/honda` -> `/RX_King/honda`). Deklarasi variabel `state` untuk memastikan apakah <b><i>path</i></b> yang diinputkan berisi direktori di dalamnya atau hanya `/RX_` (contoh: `/contoh/RX_King` tidak akan didekripsi, sementara `/contoh/RX_King/honda` akan didekripsi). Lalu cek apakah <i>string</i> setelah karakter pertama dari `ptr` memiliki karakter `/`, jika iya, maka `state` akan diset menjadi 1.
+
+```C
+else if (ptr2 != NULL && state2) {
+    ptr2 = strstr(ptr2 + 1, "/");
+    char pathRXDirBuff[1000];
+    char pathEncryptedBuff[1000];
+    	
+    strcpy(pathEncryptedBuff, ptr2);
+    strncpy(pathRXDirBuff, path, ptr2 - path);
+    
+    . . .
+}
+```
+Solusi yang digunakan selanjutnya sama persis dengan [soal 1](#soal-1 "Goto 1"), hanya mengganti variabel `ptr` menjadi `ptr2` dan `state` menjadi `state2`.
+
+```C
+if (de->d_type == DT_REG) {
+    char *whereIsExtension = strrchr(encodeThis, '.');
+					
+    if (whereIsExtension - encodeThis < 1) {
+	atbashCode(encodeThis);
+	rot13Code(encodeThis);
+    }
+    
+    else {
+        . . .
+	
+	atbashCode(pathFileBuff);
+	rot13Code(pathFileBuff);
+	memset(encodeThis, 0, sizeof(encodeThis));
+	sprintf(encodeThis, "%s%s", pathFileBuff, pathExtBuff);
+    }
+}
+
+else if (de->d_type == DT_DIR) {
+    atbashCode(encodeThis);
+    rot13Code(encodeThis);
+}
+```
+Serta menambahkan fungsi `rot13Code()` setelah `atbashCode()` pada beberapa bagian kode untuk penyelesaian [soal.2a](#2a "Goto 2a").
+
+`System call xmp_readdir`
+```C
+static int xmp_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offset, struct fuse_file_info *fi) {
+    . . .
+
+    else if (strstr(path, "/RX_") != NULL) {
+        . . .
+    
+        if (de->d_type == DT_REG) {
+            . . .
+	
+	    if (whereIsExtension - encodeThis < 1) {
+	        atbashCode(encodeThis);
+	        rot13Code(encodeThis);
+	    }
+	
+	    else {
+	        . . .
+	    
+	        atbashCode(pathFileBuff);
+	        rot13Code(pathFileBuff);
+	        memset(encodeThis, 0, sizeof(encodeThis));
+	        sprintf(encodeThis, "%s%s", pathFileBuff, pathExtBuff);
+	    }
+        }
+    
+        else if (de->d_type == DT_DIR) {
+            atbashCode(encodeThis);
+	    rot13Code(encodeThis);
+        }
+    }
+    
+    . . .
+}
+```
+<i>System call</i> `xmp_readdir()` ini digunakan untuk melakukan enkripsi pada <i>entry</i> yang berada pada direktori `/RX_`. Pada fungsi di atas, jika pada <i>path</i> terdapat `/RX_`, maka akan dilakukan enkripsi. Solusi yang digunakan selanjutnya sama persis dengan [soal 1](#soal-1 "Goto 1"), serta menambahkan fungsi `rot13Code()` setelah `atbashCode()` pada beberapa bagian kode untuk penyelesaian [soal.2a](#2a "Goto 2a").
+
+### OUTPUT ###
+
+### KENDALA ###
+- Pada [soal.2b](#2b "Goto 2b"), tidak bisa membedakan direktori yang dibuat dengan <b>mkdir</b> dan di-<b>rename</b> sehingga tidak selesai.
+- Pada [soal.2e](#2e "Goto 2e"), tidak mengerti cara untuk <i>split file</i> menjadi beberapa pecahan yang <i>file</i>-nya utuh di <i>filesystem</i> <b>SinSei</b> sehingga tidak selesai.
+- Masih ada <i>warning</i> untuk alokasi memori variabel pada fungsi, namun program masih bisa berjalan dengan baik. 
+
 ## SOAL 3 ##
 
 Karena Sin masih super duper gabut akhirnya dia menambahkan sebuah fitur lagi pada <i>filesystem</i> mereka.
@@ -462,6 +602,9 @@ Karena Sin masih super duper gabut akhirnya dia menambahkan sebuah fitur lagi pa
 - Pada direktori spesial, semua nama <i>file</i> (tidak termasuk ekstensi) pada FUSE akan berubah menjadi <i>lowercase insensitive</i> dan diberi ekstensi baru berupa nilai desimal dari biner perbedaan namanya.
   
   Contohnya jika pada direktori asli nama <i>file</i>-nya adalah `FiLe_CoNtoH.txt` maka pada FUSE akan menjadi `file_contoh.txt.1321`. 1321 berasal dari biner 10100101001.
+
+### KENDALA ###
+- Tidak paham maksud soal di bagian direktori spesial sehingga tidak bisa mengerjakan sub-sub soal lainnya.
 
 ## SOAL 4 ##
 
@@ -495,3 +638,78 @@ Untuk memudahkan dalam memonitor kegiatan pada <i>filesystem</i> mereka, Sin dan
   INFO::28052021-10:00:00:CREATE::/test.txt
   INFO::28052021-10:01:00:RENAME::/test.txt::/rename.txt
   ```
+
+### JAWABAN ###
+
+Membuat sebuah fungsi yang akan melakukan <i>log</i> pada setiap <i>system call</i> dengan format yang telah ditentukan. Setiap <i>system call</i> akan menginputkan <b>LEVEL</b>, <b>CMD</b>, dan <b>DESC</b> (`path`) yang diinputkan pada <i>system call</i> tersebut.
+
+Fungsi yang digunakan untuk melakukan <i>logging</i> adalah fungsi `fileLog()`.
+```C
+static const char *logpath = "/home/thomasfelix/SinSeiFS.log";
+```
+
+Pertama, melakukan pendefinisian <i>path</i> dari <i>file log</i> yang akan diproses oleh fungsi `fileLog()`.
+
+`Fungsi fileLog`
+```C
+void fileLog(char *level, char *cmd, int lenDesc, const char *desc[]) {
+    FILE *file = fopen(logpath, "a");
+    time_t t;
+    struct tm *temp;
+    char timeBuffer[100];
+
+    time(&t);
+    temp = localtime(&t);
+
+    strftime(timeBuffer, sizeof(timeBuffer), "%d%m%Y-%H:%M:%S", temp);
+	
+    fprintf(file, "%s::%s:%s", level, timeBuffer, cmd);
+  	
+    for (int i = 0; i < lenDesc; i++) {
+        fprintf(file, "::%s", desc[i]);
+    }
+
+    fprintf(file, "\n");
+
+    fclose(file);
+}
+```
+Fungsi `fileLog()` akan menuliskan pada <i>file log</i> sesuai dengan format yang sudah ditentukan. Fungsi ini memerlukan empat argument ketika dipanggil.
+  - `level`: untuk mendefinisikan level dari atribut yang berjalan (<b>INFO</b>/<b>WARNING</b>).
+  - `cmd`: untuk mendefinisikan <i>command system call</i> yang terpanggil.
+  - `lenDesc`: untuk menyimpan banyaknya <b>DESC</b> yang akan ditulis di dalam <i>log</i>.
+  - `desc[]`: untuk menyimpan <i>array of string</i> dari <b>DESC</b> yang akan ditulis.
+
+Fungsi akan membuka dan membuat (jika belum ada) <i>file log</i> pada `logpath` menggunakan `fopen` ke dalam <i>pointer</i> FILE `*file`. Lalu mencari waktu saat ini menggunakan variabel `t` dan `*temp`, disimpan dalam bentuk <i>string</i> pada `timeBuffer`. Menjalankan fungsi `time` pada alamat `t` untuk menyimpan <i>timestamp</i> waktu sekarang. Kemudian, `t` akan diubah menjadi <i>struct</i> `tm` menggunakan fungsi `localtime` ke dalam variabel `temp`. Menjalankan fungsi `strftime` untuk memformat `temp` sesuai dengan soal dan dimasukkan ke dalam variabel `timeBuffer`. Setelah itu, `level`, `timeBuffer`, dan, `cmd` akan di-<i>print</i> ke dalam `file` menggunakan fungsi `fprintf`. Untuk masing-masing `desc` akan diiterasi menggunakan `lenDesc`. Masing-masing iterasi akan memasukkan `desc[i]` ke dalam `file` dengan format yang sesuai. Terakhir, masukkan `"\n"` di akhir <i>log</i>. Setelah <i>log</i> selesai, `file` akan di `fclose` dan untuk seluruh <i>system call</i> akan memanggil fungsi `fileLog()` untuk melakukan <i>logging</i>.
+
+Sebagai catatan, jangan lupa untuk <b>rmdir</b> dan <b>unlink</b> menggunakan level <b>WARNING</b>, selain itu semua <i>system call</i> memakai level <b>INFO</b>. Bisa dilihat seperti contoh berikut.
+
+`Fungsi xmp_rmdir`
+```C
+static int xmp_rmdir(const char *path) {
+    . . .
+
+    const char *desc[] = {path};
+    fileLog("WARNING", "RMDIR", 1, desc);
+
+    . . .
+}
+```
+
+`Fungsi xmp_truncate`
+```C
+static int xmp_truncate(const char *path, off_t size) {
+    . . .
+
+    const char *desc[] = {path};
+    fileLog("INFO", "TRUNCATE", 1, desc);
+
+    . . .
+}
+```
+
+### OUTPUT ###
+
+### KENDALA ###
+- Tidak semua fungsi FUSE bisa diuji untuk proses <i>logging</i>, contohnya fungsi `xmp_utimens`.
+- Masih ada <i>warning</i> untuk penggunaan `sprintf` pada fungsi, namun program masih bisa berjalan dengan baik. 
