@@ -112,7 +112,7 @@ Membuat beberapa fungsi yang akan digunakan untuk menyelesaikan soal ini.
   - `getDirAndFile()`: untuk mendapatkan <i><b>directory</b></i> dan <i><b>filename</b></i> dari <i><b>path</b></i> yang telah diinputkan.
   - `changePath()`: untuk mengganti <i><b>path</b></i> yang diinputkan menjadi <i>mount</i>-<i>mount</i> yang telah diset. Fungsi ini juga berfungsi untuk mengecek apakah perlu melakukan dekripsi (direktori berawalan `/AtoZ`) pada <i><b>path</b></i> yang diinputkan. Dan juga untuk melakukan enkripsi, melakukannya langsung pada <i>system call</i> `xmp_readdir()`.
 
-`Fungsi atbashCode()`
+`Fungsi atbashCode`
 ```C
 void atbashCode(char *string) {
     int i = 0;
@@ -132,7 +132,7 @@ void atbashCode(char *string) {
 ```
 Fungsi ini memiliki satu argumen, yaitu `string` sebagai alamat yang akan dienkripsi ataupun didekripsi. Untuk metode <b>Atbash Cipher</b> bisa dilihat pada referensi-referensi yang ada di internet, salah satunya [di sini](http://www.cprograms4future.com/p/program-213atbash-cipher_3.html, "di sini"). Logika yang digunakan untuk proses enkripsi dan dekripsi sama, jadi tidak perlu membuat fungsi lagi atau memisahkan proses enkripsi dan dekripsi.
 
-`Fungsi getDirAndFile()`
+`Fungsi getDirAndFile`
 ```C
 void getDirAndFile(char *dir, char *file, char *path) {
     char buff[1000];
@@ -154,6 +154,23 @@ void getDirAndFile(char *dir, char *file, char *path) {
 }
 ```
 Fungsi ini akan membagi `path` yang diinputkan menjadi `dir` dan `file` berdasarkan lokasi `/` terakhir. Pertama, deklarasi variabel `buff` untuk menyimpan `path`, lalu agar tidak mengubah isinya memakai `strtok()`. `dir` dan `file` di-`memset()` supaya isinya menjadi kosong. Kemudian, `path` akan di-`strcpy()` ke dalam `buff`. Buat `token` dengan `strtok()` pada `buff` dengan <i>delimiter</i> `"/"`, diiterasi untuk masing-masing `token`. Tiap iterasi akan meng-<i>copy</i> isi `token` ke dalam variabel `file` menggunakan `sprintf()`, lalu, `token` akan diiterasi ke `token` selanjutnya. Di akhir iterasi akan dicek apakah `token` tersebut belum `token` terakhir, jika belum, maka akan <i>update</i> variabel `dir` agar menjadi `dir/file` menggunakan `sprintf()`
+
+`Fungsi changePath`
+```C
+void changePath(char *fpath, const char *path, int isWriteOperation, int isFileAsked) {
+    char *ptr = strstr(path, "/AtoZ_");
+    int state = 0;
+  	
+    if (ptr != NULL) {
+        if (strstr(ptr + 1, "/") != NULL) {
+	    state = 1;
+	}
+    }
+    
+    . . .
+}
+```
+Fungsi ini didefinisikan dengan empat argumen. Argumen pertama, `fpath` untuk <i>buffer</i> hasil perubahan `path` menjadi <i>path</i> yang baru. Argumen kedua, `path` untuk diinput ke masing-masing <i>system call</i> dan mengubah <i>path</i>-nya sesuai <b><i>mount</i>-<i>point</i></b> atau metode enkripsi <b>Atbash Cipher</b>. Argumen ketiga, `isWriteOperation` untuk mendefinisikan <i>system call</i> yang memanggil fungsi apakah operasi <i>write</i> (karena ketika ingin membuat <i>file</i> pada direktori yang terenkripsi dengan `/AtoZ`, maka <i>path</i> untuk <i>filename</i> yang di-<i>write</i> tidak dienkripsi maupun dienkripsi). Argument keempat, `isFileAsked` untuk mendefinisikan apakah <i>system call</i> yang memanggil fungsi ingin melakukan dekripsi pada sebuah <i>file</i> atau direktori (pada direktori, dekripsi akan dilakukan langsung, sementara pada <i>file</i> harus mengecek ekstensinya terlebih dahulu.
 
 ## SOAL 2 ##
 
